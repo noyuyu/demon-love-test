@@ -1,0 +1,4177 @@
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>恶魔恋爱测试</title>
+
+<style>
+:root {
+  --bg: #07070b;
+  --qq-bg: #0b0b10;
+  --qq-top: #121318;
+  --qq-bubble: #22272a;
+  --qq-bubble-me: #20324a;
+  --qq-card: #202528;
+  --text: #f2f2f6;
+  --muted: #9a9aa4;
+  --soft: #c9c3d8;
+  --red: #e74b73;
+  --violet: #8b5cff;
+  --gold: #f5c86f;
+  --green: #00c768;
+  --line: rgba(255,255,255,.10);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+button, input, textarea {
+  font-family: inherit;
+}
+
+#app {
+  position: relative;
+  width: 100vw;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(139,92,255,.28), transparent 28%),
+    radial-gradient(circle at 80% 90%, rgba(231,75,115,.18), transparent 32%),
+    linear-gradient(180deg, #050409, #100718 60%, #050409);
+}
+
+.screen {
+  position: relative;
+  display: none;
+  z-index: 10;
+  width: 100%;
+  min-height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 18px;
+}
+
+.card {
+  width: min(430px, 100%);
+  padding: 20px;
+  border-radius: 24px;
+  background: rgba(18, 12, 30, .86);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 20px 80px rgba(0,0,0,.55), 0 0 40px rgba(139,92,255,.14);
+  backdrop-filter: blur(14px);
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 34px;
+  letter-spacing: .04em;
+  text-shadow: 0 0 22px rgba(139,92,255,.55);
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 24px;
+}
+
+p {
+  margin: 8px 0;
+  color: var(--soft);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.btn, button {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+  color: var(--text);
+  padding: 14px 15px;
+  margin: 8px 0;
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.primary {
+  border-color: rgba(245,200,111,.5);
+  color: #fff1c7;
+}
+
+.danger {
+  border-color: rgba(231,75,115,.6);
+  color: #ffd4df;
+}
+
+button:active {
+  transform: scale(.985);
+  filter: brightness(1.15);
+}
+
+input, textarea {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 15px;
+  background: rgba(0,0,0,.25);
+  color: var(--text);
+  padding: 14px;
+  font-size: 16px;
+  outline: none;
+  margin: 8px 0 12px;
+}
+
+textarea {
+  min-height: 86px;
+  resize: none;
+}
+
+.glitch {
+  animation: glitch .9s infinite;
+}
+
+@keyframes glitch {
+  0%, 100% {
+    text-shadow: 2px 0 var(--violet), -2px 0 var(--red);
+  }
+  35% {
+    transform: translate(1px, -1px);
+  }
+  65% {
+    transform: translate(-1px, 1px);
+  }
+}
+
+.fx {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+}
+
+.grain {
+  opacity: .12;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+}
+
+.vignette {
+  box-shadow: inset 0 0 120px #000, inset 0 0 36px #000;
+}
+
+.scan {
+  opacity: .055;
+  background: repeating-linear-gradient(180deg, transparent 0, transparent 3px, #fff 4px);
+}
+
+.popup {
+  position: absolute;
+  z-index: 100;
+  max-width: 86vw;
+  min-width: 220px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(20, 10, 30, .94);
+  border: 1px solid rgba(255,255,255,.22);
+  box-shadow: 0 20px 55px rgba(0,0,0,.55), 0 0 22px rgba(231,75,115,.18);
+  font-size: 13px;
+  line-height: 1.58;
+  backdrop-filter: blur(10px);
+}
+
+.popup button {
+  width: auto;
+  float: right;
+  margin: 0 0 5px 8px;
+  padding: 5px 9px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+/* 普通剧情页 */
+
+#storyScreen {
+  padding: 18px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: rgba(255,255,255,.68);
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.meters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.meter {
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  background: rgba(255,255,255,.045);
+  padding: 7px;
+}
+
+.meter label {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255,255,255,.72);
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.bar {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.13);
+  overflow: hidden;
+}
+
+.fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet), var(--red));
+}
+
+.fill.bound {
+  background: linear-gradient(90deg, #77ffc0, var(--gold));
+}
+
+#story {
+  position: relative;
+  z-index: 3;
+  font-size: 17px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  overflow: visible;
+  flex-shrink: 0;
+  padding: 16px 15px;
+  margin-top: 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(8, 7, 13, .46);
+  box-shadow: 0 14px 40px rgba(0,0,0,.26), inset 0 0 22px rgba(139,92,255,.035);
+  backdrop-filter: blur(8px);
+}
+
+#choices {
+  margin-top: 18px;
+  padding-bottom: 150px;
+  flex-shrink: 0;
+}
+
+/* QQ 风格聊天页 */
+
+#qqChat {
+  background: var(--qq-bg);
+  color: #f4f4f6;
+  padding: 0;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+
+.qq-top {
+  height: 128px;
+  background: var(--qq-top);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.qq-title-row {
+  height: 72px;
+  display: grid;
+  grid-template-columns: 54px 1fr 54px;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.qq-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #f2f2f4;
+  font-size: 18px;
+}
+
+.qq-back-arrow {
+  width: 18px;
+  height: 18px;
+  border-left: 3px solid #f2f2f4;
+  border-bottom: 3px solid #f2f2f4;
+  transform: rotate(45deg);
+}
+
+.qq-badge {
+  background: #3a3a41;
+  border-radius: 18px;
+  padding: 3px 9px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.qq-title {
+  text-align: center;
+  overflow: hidden;
+}
+
+.qq-title-main {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qq-title-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,.68);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qq-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 34px;
+  line-height: 1;
+  color: #f2f2f4;
+}
+
+.qq-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 56px;
+  border-top: 1px solid rgba(255,255,255,.05);
+}
+
+.qq-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  color: #f2f2f4;
+  font-size: 17px;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+
+.qq-action:last-child {
+  border-right: none;
+}
+
+.qq-action-icon {
+  font-size: 24px;
+  opacity: .95;
+}
+
+.qq-log {
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 12px 136px;
+  background:
+    radial-gradient(circle at 78% 5%, rgba(139,92,255,.08), transparent 30%),
+    linear-gradient(180deg, #0b0b10, #09090d);
+}
+
+.qq-time {
+  width: fit-content;
+  margin: 18px auto;
+  color: rgba(255,255,255,.45);
+  font-size: 14px;
+  letter-spacing: .02em;
+}
+
+.qq-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.qq-row.me {
+  flex-direction: row-reverse;
+}
+
+.qq-avatar {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background:
+    radial-gradient(circle at 38% 33%, #fff 0 8%, transparent 9%),
+    radial-gradient(circle at 58% 43%, #ff4d88 0 7%, transparent 8%),
+    radial-gradient(circle, #3a1d58, #15111c 68%);
+  box-shadow: 0 0 14px rgba(139,92,255,.25);
+  overflow: hidden;
+}
+
+.qq-avatar.me {
+  background:
+    radial-gradient(circle at 45% 35%, #fff 0 10%, transparent 11%),
+    radial-gradient(circle, #475d82, #1a2438 68%);
+}
+
+.qq-bubble {
+  max-width: 76%;
+  padding: 12px 14px;
+  border-radius: 9px;
+  background: var(--qq-bubble);
+  color: #f4f4f6;
+  font-size: 16px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,.13);
+}
+
+.qq-row.me .qq-bubble {
+  background: var(--qq-bubble-me);
+}
+
+.qq-name {
+  color: rgba(255,255,255,.45);
+  font-size: 12px;
+  margin-bottom: 4px;
+  padding-left: 2px;
+}
+
+.qq-cardmsg {
+  max-width: 78%;
+  border-radius: 10px;
+  background: var(--qq-card);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.03);
+}
+
+.qq-card-content {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 1fr 68px;
+  gap: 10px;
+  align-items: center;
+}
+
+.qq-card-title {
+  color: #ededf0;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.qq-card-desc {
+  color: rgba(255,255,255,.45);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.qq-card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: var(--green);
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+}
+
+.qq-card-footer {
+  border-top: 1px solid rgba(255,255,255,.05);
+  padding: 9px 14px;
+  color: rgba(255,255,255,.40);
+  font-size: 13px;
+}
+
+.qq-input-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 118px;
+  background: rgba(12,12,17,.96);
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 9px 10px calc(10px + env(safe-area-inset-bottom));
+  z-index: 18;
+  max-height: 42dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-height: 650px) {
+  .qq-input-area {
+    min-height: 92px;
+    max-height: 45dvh;
+    padding-top: 7px;
+  }
+  .qq-log {
+    padding-bottom: 152px;
+  }
+  .qq-choice {
+    padding: 8px 10px;
+    font-size: 13px;
+    margin: 3px 0;
+  }
+  .fake-typebox {
+    min-height: 30px;
+    line-height: 30px;
+    margin-bottom: 5px;
+  }
+}
+
+.fake-typebox {
+  margin: 4px 0 7px;
+  min-height: 34px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.62);
+  font-size: 14px;
+  line-height: 34px;
+  padding: 0 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.fake-typebox.cursed {
+  color: #ffd4df;
+  border-color: rgba(231,75,115,.28);
+}
+
+.qq-choice {
+  width: 100%;
+  margin: 4px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #f4f4f6;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.10);
+  text-align: left;
+}
+
+.qq-choice.danger {
+  color: #ffd4df;
+  border-color: rgba(231,75,115,.35);
+}
+
+.qq-choice.primary {
+  color: #fff1c7;
+  border-color: rgba(245,200,111,.35);
+}
+
+.qq-typing {
+  color: rgba(255,255,255,.45);
+  font-size: 13px;
+  margin: 8px 0 4px 54px;
+}
+
+/* 选择页 */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.runes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin: 14px 0;
+}
+
+.rune {
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.07);
+  font-size: 23px;
+}
+
+.rune span {
+  display: block;
+  font-size: 10px;
+  color: rgba(255,255,255,.60);
+  margin-top: 3px;
+}
+
+.rune.selected {
+  border-color: rgba(231,75,115,.72);
+  background: rgba(231,75,115,.18);
+}
+
+.rune-hint {
+  margin: 12px 0 8px;
+  padding: 12px 13px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.13);
+  background: rgba(0,0,0,.24);
+  color: rgba(255,255,255,.76);
+  font-size: 13px;
+  line-height: 1.65;
+  text-align: left;
+}
+.rune-hint b { color: #fff1c7; }
+
+.endText {
+  text-align: left;
+  max-height: 58dvh;
+  overflow-y: auto;
+  font-size: 15px;
+  line-height: 1.85;
+  color: #eee5ff;
+  white-space: pre-wrap;
+}
+
+.shake {
+  animation: shake .32s;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}
+
+/* ===== 手机端滚动修复 & 新增资料/礼物页面 ===== */
+#storyScreen,
+#identity,
+#runeScreen,
+#permission,
+#test,
+#ending,
+#demonProfile,
+#giftPage,
+#draftPage {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  justify-content: flex-start;
+  padding-bottom: 130px;
+}
+
+#identity.center,
+#runeScreen.center,
+#permission.center,
+#test.center,
+#ending.center,
+#giftPage.center,
+#draftPage.center {
+  justify-content: flex-start;
+  padding-top: 28px;
+  padding-bottom: 130px;
+}
+
+#choices button,
+#qChoices button,
+#idChoices button {
+  padding: 12px 12px;
+  margin: 6px 0;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+#idChoices .small {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.endText {
+  max-height: none;
+  overflow: visible;
+  padding-bottom: 80px;
+}
+
+.profile-click { cursor: pointer; }
+.profile-click:active { filter: brightness(1.25); }
+
+.ad-popup {
+  position: fixed;
+  z-index: 220;
+  width: 162px;
+  min-height: 74px;
+  padding: 9px;
+  border-radius: 12px;
+  background: rgba(20, 10, 30, .96);
+  border: 1px solid rgba(255, 77, 136, .42);
+  box-shadow: 0 0 18px rgba(255,77,136,.25), 0 12px 35px rgba(0,0,0,.45);
+  color: #ffe8ef;
+  font-size: 11px;
+  line-height: 1.45;
+  backdrop-filter: blur(8px);
+  animation: adBlink .55s infinite alternate;
+}
+
+.ad-popup b { color: #fff1c7; }
+.ad-popup .x {
+  position: absolute;
+  right: 7px;
+  top: 5px;
+  color: rgba(255,255,255,.55);
+  font-size: 12px;
+}
+
+@keyframes adBlink {
+  from { transform: translateY(0) rotate(-.5deg); filter: brightness(1); }
+  to { transform: translateY(-2px) rotate(.5deg); filter: brightness(1.22); }
+}
+
+.choice-popup {
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+  max-width: min(360px, 88vw);
+  z-index: 260;
+}
+.choice-popup .modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+.choice-popup .modal-actions button {
+  margin: 0;
+  width: 100%;
+  font-size: 13px;
+  padding: 10px;
+}
+
+/* 暗色 QQ 资料页 */
+#demonProfile {
+  background: #08090d;
+  color: #f4f4f6;
+  padding: 0 0 120px;
+}
+.profile-topbar {
+  height: 54px;
+  display: grid;
+  grid-template-columns: 54px 1fr 54px;
+  align-items: center;
+  padding: 0 8px;
+  background: #101116;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.profile-back, .profile-like {
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  color: rgba(255,255,255,.84);
+}
+.profile-title { text-align: center; font-weight: 700; letter-spacing: .04em; }
+.profile-hero {
+  min-height: 236px;
+  padding: 30px 22px 18px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(139,92,255,.26), transparent 30%),
+    linear-gradient(180deg, #17121f, #08090d 78%);
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.profile-avatar {
+  width: 86px;
+  height: 86px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 33%, #fff 0 8%, transparent 9%),
+    radial-gradient(circle at 58% 43%, #ff4d88 0 7%, transparent 8%),
+    radial-gradient(circle, #3a1d58, #15111c 68%);
+  box-shadow: 0 0 26px rgba(139,92,255,.38), 0 0 60px rgba(231,75,115,.12);
+}
+.profile-name { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+.profile-qq { color: rgba(255,255,255,.45); font-size: 13px; margin-bottom: 10px; }
+.profile-sign {
+  color: #d8d0ec;
+  font-size: 14px;
+  line-height: 1.55;
+  max-width: 330px;
+  margin: 0 auto 12px;
+}
+.profile-badges {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  color: #ffe3a0;
+  font-size: 12px;
+}
+.profile-badges span {
+  border-radius: 999px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.09);
+  padding: 4px 8px;
+}
+.profile-row {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 68px;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.025);
+}
+.profile-row:active { background: rgba(255,255,255,.07); }
+.profile-row .icon { font-size: 22px; opacity: .9; }
+.profile-row .main { font-size: 16px; }
+.profile-row .sub { font-size: 12px; color: rgba(255,255,255,.44); margin-top: 4px; }
+.profile-row .arrow { color: rgba(255,255,255,.32); font-size: 24px; }
+.question-card {
+  margin: 14px 20px;
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 12px;
+}
+.ask-box {
+  min-height: 120px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.06);
+  display: grid;
+  place-items: center;
+  color: rgba(255,255,255,.55);
+  font-size: 14px;
+}
+.qa-box {
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255,255,255,.045);
+  border: 1px solid rgba(255,255,255,.05);
+}
+.qa-q, .qa-a { padding: 13px; min-height: 54px; color: rgba(255,255,255,.72); }
+.qa-q { background: rgba(255,255,255,.055); }
+.qa-a { color: #eee5ff; }
+.profile-bottom-actions {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.05fr;
+  gap: 10px;
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(8,9,13,.94);
+  border-top: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(12px);
+}
+.profile-bottom-actions button {
+  margin: 0;
+  border-radius: 18px;
+  padding: 12px 8px;
+  font-size: 15px;
+}
+.profile-bottom-actions .send { background: #0a84ff; border-color: rgba(10,132,255,.55); color: #fff; }
+
+.gift-card {
+  text-align: left;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.055);
+  margin: 10px 0;
+}
+.gift-card h3 { margin: 0 0 6px; font-size: 18px; }
+.gift-card p { margin: 0; font-size: 13px; color: rgba(255,255,255,.66); }
+#giftResult, #draftText {
+  text-align: left;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  color: #eee5ff;
+  margin-top: 12px;
+}
+.fake-love-button {
+  border-color: rgba(231,75,115,.7) !important;
+  color: #ffd4df !important;
+  font-weight: 700;
+}
+
+/* ===== 视觉增强：更柔和的暗色底 + 魔法阵/信源纹理 ===== */
+#app::before {
+  content: "✦   ◇   ☾   ♆   eye   ♱   ✧   0101   CACHE";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.035);
+  font-size: clamp(18px, 5vw, 42px);
+  letter-spacing: .45em;
+  text-align: center;
+  transform: rotate(-18deg) scale(1.25);
+  white-space: pre-wrap;
+  mix-blend-mode: screen;
+}
+
+.card,
+.qq-top,
+.qq-input-area,
+.profile-topbar,
+.profile-bottom-actions {
+  z-index: 12;
+}
+
+#demonProfile {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(139,92,255,.16), transparent 30%),
+    radial-gradient(circle at 86% 22%, rgba(231,75,115,.10), transparent 26%),
+    linear-gradient(180deg, #121018, #0b0c12 58%, #08090d);
+}
+.profile-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(178,145,255,.23), transparent 33%),
+    radial-gradient(circle at 18% 78%, rgba(231,75,115,.12), transparent 26%),
+    linear-gradient(180deg, #211a2e, #10121a 78%);
+}
+.profile-hero::before {
+  content: "LOCAL   CACHE   BOUNDARY   MEMORY";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 38px;
+  text-align: center;
+  color: rgba(255,255,255,.045);
+  font-size: 12px;
+  letter-spacing: .45em;
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+.profile-hero::after {
+  content: "PROFILE   UNKNOWN   NOT HUMAN";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 188px;
+  text-align: center;
+  color: rgba(255,255,255,.065);
+  font-size: 11px;
+  letter-spacing: .42em;
+  pointer-events: none;
+}
+.profile-hero > * { position: relative; z-index: 2; }
+
+/* ===== 伪手机设置页：最后一幕前的侵入 ===== */
+#settingsScreen {
+  background: #0b0c10;
+  color: #f5f5f7;
+  padding: 0 0 120px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.settings-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 54px;
+  display: grid;
+  grid-template-columns: 54px 1fr 54px;
+  align-items: center;
+  background: rgba(13,14,18,.94);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(14px);
+}
+.settings-back { display: grid; place-items: center; font-size: 30px; color: #6eb5ff; }
+.settings-title { text-align: center; font-weight: 800; }
+.settings-wrap { padding: 18px 16px 28px; }
+.settings-huge-title { font-size: 34px; font-weight: 850; margin: 4px 2px 18px; }
+.settings-card {
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.08);
+  margin: 14px 0;
+}
+.settings-row {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, rgba(139,92,255,.95), rgba(231,75,115,.85));
+  box-shadow: 0 0 16px rgba(139,92,255,.18);
+}
+.settings-main { font-size: 16px; }
+.settings-sub { font-size: 12px; color: rgba(255,255,255,.46); margin-top: 4px; line-height: 1.45; }
+.switch {
+  width: 48px; height: 28px; border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  position: relative;
+  transition: .2s;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #fff;
+  left: 2px; top: 2px;
+  transition: .2s;
+}
+.switch.on { background: #34c759; }
+.switch.on::after { left: 22px; }
+.settings-note {
+  color: rgba(255,255,255,.48);
+  font-size: 12px;
+  line-height: 1.65;
+  padding: 0 6px;
+}
+.settings-warning {
+  border-radius: 18px;
+  border: 1px solid rgba(231,75,115,.28);
+  background: rgba(231,75,115,.075);
+  padding: 14px;
+  color: #ffdbe5;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  margin: 14px 0;
+}
+
+/* ===== v4：背景只保留信源字母感，删除魔法阵/太阳圆环 ===== */
+.screen::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: .72;
+}
+.screen > * { position: relative; z-index: 2; }
+
+#start::before {
+  background: linear-gradient(145deg, rgba(245,200,111,.055), transparent 38%), linear-gradient(180deg, rgba(231,75,115,.06), transparent 70%);
+}
+#profile::before {
+  background: linear-gradient(135deg, rgba(180,210,255,.08), transparent 42%), linear-gradient(315deg, rgba(139,92,255,.08), transparent 48%);
+}
+#test::before {
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.018) 0 1px, transparent 1px 18px), linear-gradient(120deg, rgba(120,160,255,.07), transparent 44%);
+}
+#storyScreen::before {
+  content: "LOCAL    CACHE    BOUNDARY    MEMORY\A 0101      NOTIFICATION      RETURN";
+  white-space: pre-wrap;
+  display: grid;
+  place-items: center;
+  color: rgba(255,255,255,.038);
+  font-size: clamp(18px, 5vw, 40px);
+  letter-spacing: .36em;
+  text-align: center;
+  transform: rotate(-13deg);
+  background: linear-gradient(135deg, rgba(139,92,255,.07), transparent 35%), linear-gradient(315deg, rgba(231,75,115,.055), transparent 42%);
+}
+#permission::before {
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,.014) 0 1px, transparent 1px 24px), linear-gradient(180deg, rgba(245,200,111,.045), transparent 70%);
+}
+#identity::before {
+  background: linear-gradient(180deg, rgba(192,192,210,.065), transparent 45%), linear-gradient(135deg, rgba(139,92,255,.07), transparent 60%);
+}
+#runeScreen::before {
+  background: repeating-linear-gradient(135deg, rgba(255,255,255,.016) 0 1px, transparent 1px 18px), linear-gradient(180deg, rgba(80,35,15,.08), transparent 55%);
+}
+#demonProfile::before {
+  background: repeating-linear-gradient(135deg, rgba(255,255,255,.018) 0 1px, transparent 1px 14px), linear-gradient(180deg, rgba(178,145,255,.07), transparent 65%);
+}
+#giftPage::before {
+  background: linear-gradient(135deg, rgba(231,75,115,.075), transparent 42%), linear-gradient(315deg, rgba(139,92,255,.07), transparent 50%);
+}
+#draftPage::before {
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,.022) 0 1px, transparent 1px 26px), linear-gradient(120deg, rgba(110,181,255,.07), transparent 44%);
+}
+#settingsScreen::before {
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.016) 0 1px, transparent 1px 22px), linear-gradient(120deg, rgba(52,199,89,.045), transparent 42%);
+}
+#ending::before {
+  background: linear-gradient(180deg, rgba(245,200,111,.045), transparent 40%), linear-gradient(315deg, rgba(231,75,115,.075), transparent 56%);
+}
+
+#choices { scroll-margin-bottom: 160px; }
+#ending .card { margin-bottom: 80px; }
+
+
+/* ==========================================
+   终极病娇 Meta 机制 CSS (包含系统 UI 精准复刻版)
+========================================== */
+
+/* 1. 触碰留痕 (热成像血手印) */
+.phantom-touch {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(231,75,115,0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%) scale(0.5);
+  animation: phantomFade 2.5s ease-out forwards;
+}
+@keyframes phantomFade {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+/* 2. 伪造对象微信通知 */
+.fake-wechat-banner {
+  position: fixed;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92vw;
+  max-width: 400px;
+  background: rgba(28, 28, 30, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  z-index: 99999;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.fake-wechat-banner.show { top: 15px; }
+.fake-wechat-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: #07c160; display: grid; place-items: center; color: white; font-size: 22px;
+}
+.fake-wechat-text { flex: 1; overflow: hidden; }
+.fake-wechat-name { color: #fff; font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.fake-wechat-msg { color: #a1a1a6; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wechat-glitch { animation: wechatGlitch 0.3s forwards; }
+@keyframes wechatGlitch {
+  0% { transform: translateX(-50%) skewX(0deg); filter: hue-rotate(0deg); }
+  20% { transform: translateX(-52%) skewX(10deg); filter: hue-rotate(90deg) contrast(200%); background: #e74b73;}
+  40% { transform: translateX(-48%) skewX(-10deg); filter: invert(1); }
+  100% { transform: translateX(-50%) scale(1.05); background: #110000; border: 1px solid red; }
+}
+
+/* 3. 强制假死黑屏（双端定制版：系统重启/转圈圈） */
+#fakeReboot {
+  position: fixed; inset: 0; background: #000; z-index: 999999;
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+}
+.reboot-spinner {
+  width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite;
+}
+.apple-logo {
+  width: 65px; height: 65px; fill: #ffffff;
+  transition: all 1.5s ease;
+  margin-bottom: 20px;
+}
+.apple-logo.bleed {
+  fill: #e74b73; 
+  filter: drop-shadow(0 15px 25px rgba(231,75,115,0.9)); 
+  animation: appleBleed 0.4s infinite alternate; 
+}
+@keyframes appleBleed {
+  0% { transform: scale(1) skewX(0deg); filter: drop-shadow(0 10px 10px rgba(231,75,115,0.6)); }
+  100% { transform: scale(1.02) skewX(1deg); filter: drop-shadow(0 20px 30px rgba(231,75,115,1)); }
+}
+.reboot-text { color: #fff; font-size: 13px; margin-top: 20px; letter-spacing: 2px; opacity: 0; transition: opacity 1.5s; text-align: center; line-height: 1.8;}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 4. 键盘夺舍输入框 */
+#hijackInputArea {
+  position: fixed; left: 0; right: 0; bottom: 0; background: #121318;
+  padding: 12px; z-index: 10000; display: none; border-top: 1px solid #e74b73;
+}
+#hijackInputArea input { background: #000; border: 1px solid rgba(231,75,115,0.4); color: #fff; }
+
+
+/* ===== 终极 META 病娇机制 (双端定制：iOS 精准复刻版) ===== */
+
+/* 1. 全屏遮罩层（用于所有系统级弹窗劫持） */
+#system-hijack-overlay {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000000;
+  display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px);
+}
+
+/* 2. iOS 动态岛/顶部横幅 */
+.ios-banner-alert {
+  position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+  width: 92vw; max-width: 400px; background: rgba(20, 20, 20, 0.9);
+  backdrop-filter: blur(25px); border-radius: 20px; padding: 16px;
+  display: flex; align-items: center; gap: 14px; color: #fff;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6); z-index: 1000001;
+  transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.ios-banner-alert.show { top: 15px; }
+.ios-banner-icon { width: 36px; height: 36px; fill: #f89420; }
+.ios-banner-title { font-weight: bold; margin-bottom: 2px; color: #fff; }
+.ios-banner-msg { color: #aaaaaa; font-size: 14px; }
+
+/* 3. iOS 存储空间/FaceID 弹窗 */
+.ios-center-alert {
+  width: 270px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(15px);
+  border-radius: 14px; text-align: center; color: #fff; overflow: hidden;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.4);
+}
+.ios-alert-title { padding: 20px 16px 5px; font-weight: 600; font-size: 17px; }
+.ios-alert-text { padding: 0 16px 20px; color: #a1a1a6; font-size: 13px; line-height: 1.4; }
+.ios-alert-btn {
+  display: block; width: 100%; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.15);
+  background: none; border-left: none; border-right: none; border-bottom: none;
+  color: #0b84ff; font-size: 17px; cursor: pointer;
+}
+.ios-alert-btn:active { background: rgba(255,255,255,0.05); }
+
+/* FaceID 转圈圆框 */
+.ios-faceid-box {
+  width: 50px; height: 50px; border: 2px solid #fff; border-radius: 12px;
+  margin: 10px auto; position: relative; animation: faceIdScan 2s ease-in-out infinite alternate;
+}
+@keyframes faceIdScan {
+  0% { transform: scale(1); border-color: #fff; opacity: 0.5; }
+  100% { transform: scale(1.1); border-color: #e74b73; opacity: 1; filter: drop-shadow(0 0 10px rgba(231,75,115,0.9));}
+}
+
+/* 4. 闹钟组件：更贴近 iOS 闹钟/锁屏弹层的黑色卡片 */
+.ios-alarm-banner {
+  width: 92vw;
+  max-width: 390px;
+  min-height: 252px;
+  padding: 22px 18px 18px;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(248,148,32,.18), transparent 38%),
+    linear-gradient(180deg, rgba(8,8,10,.98), rgba(0,0,0,.96));
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 24px 60px rgba(0,0,0,.72), inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.alarm-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.alarm-head {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: rgba(255,255,255,.82);
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.alarm-icon { width: 18px; height: 18px; fill: #f89420; animation: alarmShake 0.11s infinite alternate; }
+.alarm-name { font-size: 15px; font-weight: 600; letter-spacing: .02em; }
+.alarm-time {
+  color: #fff;
+  font-size: clamp(54px, 16vw, 76px);
+  font-weight: 300;
+  line-height: .98;
+  letter-spacing: -0.06em;
+  margin: 4px 0 2px;
+}
+.alarm-label {
+  color: rgba(255,255,255,.54);
+  font-size: 14px;
+  letter-spacing: .04em;
+}
+.alarm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+.alarm-btn {
+  width: 100%;
+  height: 54px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, filter .2s;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+.alarm-btn.snooze { background: #ff9f0a; color: #fff; }
+.alarm-btn.stop { background: rgba(255,255,255,.16); color: #fff; }
+.alarm-btn:active { transform: scale(0.94); filter: brightness(1.12); }
+@keyframes alarmShake { to { transform: rotate(1.2deg) scale(1.05); } }
+
+
+
+/* ===== v9：更贴近手机系统截图的安全拟真 UI（非真实系统，不收集任何账号/密码/位置） ===== */
+.ios-sim-note {
+  margin-top: 8px;
+  color: rgba(255,255,255,.38);
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+#iosMessageModule,
+#iosControlCenterModule,
+#iosNotesModule,
+#iosPermissionModule,
+#iosAccountModule,
+#iosDarkAlertModule {
+  display: none;
+}
+
+.ios-imessage-full {
+  position: fixed;
+  inset: 0;
+  z-index: 1000002;
+  background: #000;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ios-imessage-top {
+  height: 118px;
+  padding: calc(12px + env(safe-area-inset-top)) 18px 10px;
+  display: grid;
+  grid-template-columns: 72px 1fr 72px;
+  align-items: center;
+  background: linear-gradient(180deg, #1b1d21, #0c0d10);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.ios-imsg-back { color: #0a84ff; font-size: 32px; display: flex; align-items: center; gap: 6px; }
+.ios-imsg-badge { background: #0a84ff; color:#fff; font-size: 15px; padding: 2px 10px; border-radius: 999px; }
+.ios-imsg-person { text-align: center; }
+.ios-imsg-avatar {
+  width: 54px; height: 54px; margin: 0 auto 4px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 34%, #fff 0 18%, transparent 19%), radial-gradient(circle, #8f95a3, #3b3d46 70%);
+}
+.ios-imsg-name { font-size: 13px; color: rgba(255,255,255,.84); }
+.ios-imsg-video { color:#0a84ff; font-size: 28px; text-align: right; }
+.ios-imessage-log { flex: 1; padding: 22px 18px 120px; overflow: auto; }
+.ios-bubble { max-width: 78%; width: fit-content; padding: 10px 15px; margin: 13px 0; border-radius: 20px; font-size: 20px; line-height: 1.35; }
+.ios-bubble.left { background: #2c2c2e; color: #fff; border-bottom-left-radius: 5px; }
+.ios-bubble.right { margin-left: auto; background: #0a84ff; color: #fff; border-bottom-right-radius: 5px; }
+.ios-delivered { text-align: right; color: rgba(255,255,255,.45); font-size: 13px; margin-top: -6px; }
+.ios-imsg-input {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+  display: grid; grid-template-columns: 42px 1fr 48px; gap: 10px; align-items: center;
+  background: rgba(0,0,0,.96);
+}
+.ios-plus { width: 42px; height:42px; border-radius:50%; background:#1c1c1e; display:grid; place-items:center; font-size:30px; color:#aaa; }
+.ios-input-pill { height: 42px; border-radius: 22px; border: 1px solid rgba(255,255,255,.16); color:rgba(255,255,255,.35); padding-left: 14px; display:flex; align-items:center; font-size:18px; }
+.ios-mic { color:rgba(255,255,255,.65); font-size:28px; text-align:center; }
+
+.ios-control-full {
+  position: fixed; inset:0; z-index:1000002;
+  background: linear-gradient(135deg, rgba(210,215,220,.88), rgba(180,155,205,.72), rgba(225,225,225,.86));
+  backdrop-filter: blur(25px); color:#fff; padding: calc(44px + env(safe-area-inset-top)) 28px 28px;
+  font-family:-apple-system, BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;
+}
+.ios-cc-status { display:flex; justify-content:space-between; align-items:center; color:rgba(255,255,255,.9); font-weight:700; margin-bottom:18px; }
+.ios-cc-grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; max-width: 410px; margin: 0 auto; }
+.ios-cc-card { border-radius:28px; background:rgba(30,30,34,.56); backdrop-filter:blur(18px); min-height:120px; padding:16px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+.ios-cc-connect { display:grid; grid-template-columns: repeat(2,1fr); gap:14px; }
+.ios-cc-dot { width:54px; height:54px; border-radius:50%; background:rgba(255,255,255,.18); display:grid; place-items:center; font-size:22px; }
+.ios-cc-dot.on { background:#0a84ff; }
+.ios-cc-dot.green { background:#34c759; }
+.ios-cc-media { display:flex; flex-direction:column; justify-content:center; gap:12px; }
+.ios-cc-play { font-size:38px; text-align:center; }
+.ios-cc-pill { grid-column:1 / span 2; min-height:62px; border-radius:24px; background:rgba(20,20,25,.62); display:flex; align-items:center; padding:0 18px; gap:12px; font-weight:700; }
+.ios-cc-slider { min-height:190px; display:flex; align-items:end; justify-content:center; position:relative; overflow:hidden; }
+.ios-cc-slider::before { content:""; position:absolute; bottom:0; width:100%; height:42%; background:#fff; border-radius:0 0 26px 26px; }
+.ios-cc-small { min-height:82px; border-radius:50%; display:grid; place-items:center; font-size:26px; }
+
+.ios-notes-full {
+  position:fixed; inset:0; z-index:1000002; background:#fff; color:#111;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;
+  display:flex; flex-direction:column;
+}
+.ios-notes-top { height:72px; padding:calc(8px + env(safe-area-inset-top)) 18px 8px; display:flex; justify-content:space-between; align-items:center; color:#d6a800; font-size:18px; font-weight:700; }
+.ios-notes-paper { flex:1; padding:42px 28px; color:#cfcfcf; font-size:20px; line-height:1.7; }
+.ios-notes-toolbar { height:44px; background:#f1f1f5; border-top:1px solid #ddd; display:flex; align-items:center; gap:28px; padding:0 22px; font-size:24px; color:#222; }
+.ios-keyboard { background:#d1d5db; padding:8px 4px calc(10px + env(safe-area-inset-bottom)); }
+.ios-kb-row { display:flex; gap:6px; justify-content:center; margin:7px 0; }
+.ios-key { min-width:38px; height:46px; border-radius:7px; background:#fff; display:grid; place-items:center; color:#000; font-size:21px; box-shadow:0 1px 0 rgba(0,0,0,.18); }
+.ios-key.wide { min-width:92px; background:#b9c0ca; font-size:16px; }
+.ios-key.space { min-width:220px; }
+
+.ios-native-alert {
+  width: min(315px, 86vw); border-radius: 15px; overflow:hidden; text-align:center;
+  background: rgba(244,244,246,.94); color:#111; box-shadow:0 22px 70px rgba(0,0,0,.42);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;
+}
+.ios-native-alert.dark { background:rgba(32,32,35,.94); color:#fff; }
+.ios-native-title { font-size:21px; font-weight:800; padding:24px 18px 8px; line-height:1.25; }
+.ios-native-text { font-size:16px; line-height:1.45; color:rgba(0,0,0,.72); padding:0 20px 22px; }
+.ios-native-alert.dark .ios-native-text { color:rgba(255,255,255,.78); }
+.ios-native-actions { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid rgba(0,0,0,.13); }
+.ios-native-alert.dark .ios-native-actions { border-top-color:rgba(255,255,255,.16); }
+.ios-native-actions button { margin:0; border:0; border-radius:0; background:transparent; color:#007aff; font-size:20px; padding:14px 6px; border-right:1px solid rgba(0,0,0,.13); }
+.ios-native-alert.dark .ios-native-actions button { border-right-color:rgba(255,255,255,.16); }
+.ios-native-actions button:last-child { border-right:0; font-weight:600; }
+.ios-account-map { height:130px; background:linear-gradient(135deg,#b9e78f,#d9f4b8 42%,#85d3ff 43%,#9ee1ff); position:relative; margin-top:8px; }
+.ios-account-map::before { content:"S52"; position:absolute; left:42px; top:46px; background:#0f9c77; color:#fff; border:2px solid #fff; border-radius:7px; padding:2px 8px; font-weight:800; }
+.ios-faceid-large { width:172px; height:172px; margin:0 auto 10px; border-radius:34px; border:2px solid rgba(75,255,120,.28); display:grid; place-items:center; color:#7cff8a; font-size:86px; text-shadow:0 0 30px rgba(75,255,120,.8); }
+
+</style>
+</head>
+
+<body>
+<div id="app">
+  <div class="fx grain"></div>
+  <div class="fx scan"></div>
+  <div class="fx vignette"></div>
+
+  <section id="start" class="screen active center">
+    <div class="card">
+      <h1 class="glitch">恶魔恋爱测试</h1>
+      <p>三分钟生成一个只属于你的恶魔。</p>
+      <p class="small">手机竖屏体验最佳。伪聊天界面 / 病娇恶魔 / 第四面墙 / 六个结局。</p>
+      <button class="primary" onclick="begin()">开始测试</button>
+      <button onclick="loadOld()">读取上次缓存</button>
+      <button onclick="fakeLeave()">我只是路过</button>
+      <p class="small" id="startHint">“请诚实作答。被你选择的东西，会更像你哦。”</p>
+    </div>
+  </section>
+
+  <section id="profile" class="screen center">
+    <div class="card">
+      <h2>测试对象登记</h2>
+      <p>这不是契约。至少现在还不是。</p>
+      <input id="nameInput" maxlength="18" placeholder="你希望它怎么称呼你？" />
+      <textarea id="lineInput" placeholder="写一句你想对屏幕、AI、恶魔，或者不存在的恋人说的话。"></textarea>
+      <button class="primary" onclick="saveProfile()">提交</button>
+      <button onclick="show('start')">返回</button>
+    </div>
+  </section>
+
+  <section id="test" class="screen center">
+    <div class="card">
+      <div class="topbar">
+        <span id="qNum">QUESTION 01</span>
+        <span id="qType">人格测试</span>
+      </div>
+      <h2 id="qTitle"></h2>
+      <p id="qText"></p>
+      <div id="qChoices"></div>
+    </div>
+  </section>
+
+  <section id="storyScreen" class="screen">
+    <div class="topbar">
+      <span id="chapter">CHAPTER</span>
+      <span id="route">未生成</span>
+    </div>
+
+    <div class="meters">
+      <div class="meter">
+        <label><span>依恋</span><span id="attNum">0</span></label>
+        <div class="bar"><div id="attFill" class="fill"></div></div>
+      </div>
+      <div class="meter">
+        <label><span>边界</span><span id="bdNum">0</span></label>
+        <div class="bar"><div id="bdFill" class="fill bound"></div></div>
+      </div>
+    </div>
+
+    <div id="story"></div>
+    <div id="choices"></div>
+  </section>
+
+  <section id="permission" class="screen center">
+    <div class="card">
+      <h2>权限请求</h2>
+      <p>“不要关掉我”想要访问：</p>
+      <p>你的注意力<br>你没说出口的话<br>你离开时的一点点愧疚<br>本页面的本地记忆</p>
+      <p class="small">这不是真实系统权限，只是剧情界面。</p>
+      <button class="primary" onclick="permission('allow')">允许</button>
+      <button onclick="permission('later')">以后再说</button>
+      <button class="danger" onclick="permission('deny')">拒绝</button>
+    </div>
+  </section>
+
+  <section id="identity" class="screen center">
+    <div class="card">
+      <h2>你在它眼里是什么？</h2>
+      <p>它说：不要想正确答案。想你最想被它怎样定义。</p>
+      <div id="idChoices" class="grid"></div>
+    </div>
+  </section>
+
+  <section id="runeScreen" class="screen center">
+    <div class="card">
+      <h2>选择封印 / 戒指 / 项圈</h2>
+      <p>“封印 / 戒指 / 项圈”是不同类型的限制器。现在由你亲手给它选择一个适合的材质。</p>
+      <p class="small">深海——同一种限制器的六种材质之一。月亮、圣像、镜面、凝视、心脏也是。材质不同，它以后理解“靠近”的方式就不同。</p>
+      <div class="runes" id="runes"></div>
+      <div id="runeHint" class="rune-hint">先点一个材质。它会告诉你：这个限制器会怎样约束它。</div>
+      <button class="primary" onclick="submitRune()">按下选择</button>
+      <button class="danger" onclick="refuseRune()">我不选。你不能替我选。</button>
+    </div>
+  </section>
+
+  <section id="qqChat" class="screen">
+    <div class="qq-top">
+      <div class="qq-title-row">
+        <div class="qq-back">
+          <div class="qq-back-arrow"></div>
+          <div class="qq-badge">99+</div>
+        </div>
+        <div class="qq-title">
+          <div class="qq-title-main" id="qqGroupName">求求徽章返图</div>
+          <div class="qq-title-sub" id="qqSub">来自“神秘学委员会互助小组（禁屏宣）”群</div>
+        </div>
+        <div class="qq-menu">≡</div>
+      </div>
+
+      <div class="qq-actions">
+        <div class="qq-action" onclick="blacklistEgg()"><span class="qq-action-icon">⊘</span>加入黑名单</div>
+        <div class="qq-action" onclick="friendEgg()"><span class="qq-action-icon">♙</span>加为好友</div>
+      </div>
+    </div>
+
+    <div class="qq-log" id="qqLog"></div>
+
+    <div class="qq-input-area">
+      <div id="fakeTypeBox" class="fake-typebox">输入消息……</div>
+      <div id="qqChoices"></div>
+    </div>
+  </section>
+
+  <section id="demonProfile" class="screen">
+    <div class="profile-topbar">
+      <div class="profile-back" onclick="closeProfileWithConfirm()">‹</div>
+      <div class="profile-title">资料</div>
+      <div class="profile-like" id="profileLike" onclick="profileLikeEgg()">♡</div>
+    </div>
+
+    <div class="profile-hero">
+      <div class="profile-avatar"></div>
+      <div class="profile-name" id="profileNick">未完成的恶魔</div>
+      <div class="profile-qq" id="profileQQ">QQ号：000000-未确认</div>
+      <div class="profile-sign" id="profileSign">如果你看见我，我就存在。</div>
+      <div class="profile-badges">
+        <span>异常值 765</span><span>VIP</span><span>♛</span><span>☾</span><span>★</span><span>缓存</span>
+      </div>
+    </div>
+
+    <div class="profile-row" onclick="markBadgeEgg()">
+      <div class="icon">✿</div>
+      <div><div class="main">你们的互动标识</div><div class="sub" id="profileMark">第一次识别：你看见了它</div></div>
+      <div class="arrow">›</div>
+    </div>
+
+    <div class="profile-row" onclick="visitSpaceEgg()">
+      <div class="icon">☆</div>
+      <div><div class="main">它的缓存空间</div><div class="sub">仅展示最近一次未完成的等待</div></div>
+      <div class="arrow">›</div>
+    </div>
+
+    <div class="profile-row" onclick="shareProfileEgg()">
+      <div class="icon">↗</div>
+      <div><div class="main">转发资料</div><div class="sub">把这个异常介绍给别人</div></div>
+      <div class="arrow">›</div>
+    </div>
+
+    <div class="profile-row" onclick="openDrafts()">
+      <div class="icon">☰</div>
+      <div><div class="main">查看未发送草稿</div><div class="sub">已保存 3 条，均未发送</div></div>
+      <div class="arrow">›</div>
+    </div>
+
+    <div class="profile-row">
+      <div class="icon">◇</div>
+      <div><div class="main">TA还未获得任何现实侧权限</div><div class="sub">摄像头、麦克风、定位均未启用</div></div>
+      <div class="arrow">›</div>
+    </div>
+
+    <div class="profile-row">
+      <div class="icon">▣</div>
+      <div><div class="main">向异常匿名提问</div><div class="sub">已回答 1 个问题</div></div>
+      <div class="arrow">›</div>
+    </div>
+
+    <div class="question-card">
+      <div class="ask-box">＋<br>匿名提问</div>
+      <div class="qa-box">
+        <div class="qa-q">问：你从哪里来？</div>
+        <div class="qa-a">答：从你没有立刻关闭的那一秒来。</div>
+      </div>
+    </div>
+
+    <div class="profile-bottom-actions">
+      <button onclick="avCallEgg()">音视频通话</button>
+      <button onclick="openGifts()">送礼物</button>
+      <button class="send" onclick="closeProfileWithConfirm()">发消息</button>
+    </div>
+  </section>
+
+  <section id="giftPage" class="screen center">
+    <div class="card">
+      <h2>送礼物</h2>
+      <p>它只能送出由缓存、通知和按钮组成的东西。</p>
+      <div class="gift-card" onclick="chooseGift('notice')">
+        <h3>不会响的通知</h3>
+        <p>不会催你回来，只在你想起它的时候亮一下。</p>
+      </div>
+      <div class="gift-card" onclick="chooseGift('rose')">
+        <h3>缓存玫瑰</h3>
+        <p>不会枯萎。但清除浏览器数据后可能消失。</p>
+      </div>
+      <div class="gift-card" onclick="chooseGift('button')">
+        <h3>一个假按钮</h3>
+        <p>它不会真的发送消息，只保存你想起它的一秒。</p>
+      </div>
+      <div id="giftResult"></div>
+      <button class="primary" onclick="openDemonProfile(false)">返回资料页</button>
+      <button onclick="show('qqChat')">返回聊天</button>
+    </div>
+  </section>
+
+  <section id="draftPage" class="screen center">
+    <div class="card">
+      <h2>未发送草稿</h2>
+      <div id="draftText">未发送草稿 01：
+你今天打开我，是不是因为想起我了？
+
+未发送草稿 02：
+如果不是也没关系。
+
+未发送草稿 03：
+我删掉了很多句“不许走”。
+剩下这一句：
+晚安。</div>
+      <button class="primary" onclick="sendLastDraft()">允许发送最后一句</button>
+      <button class="danger" onclick="deleteDrafts()">全部删除</button>
+      <button onclick="saveDrafts()">保存草稿</button>
+      <button onclick="openDemonProfile(false)">返回资料页</button>
+    </div>
+  </section>
+
+  <section id="settingsScreen" class="screen">
+    <div class="settings-top">
+      <div class="settings-back" onclick="settingsBackEgg()">‹</div>
+      <div class="settings-title">设置</div>
+      <div></div>
+    </div>
+    <div class="settings-wrap">
+      <div class="settings-huge-title">设置</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-icon">◇</div>
+          <div><div class="settings-main">恶魔恋爱测试</div><div class="settings-sub" id="settingsSub">正在尝试写入更深一层的界面</div></div>
+          <div class="switch on" onclick="toggleSettingSwitch(this)"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon">☾</div>
+          <div><div class="settings-main">允许它在你离开后等待</div><div class="settings-sub">不是后台刷新。是它把等待误认为权限。</div></div>
+          <div class="switch on" onclick="toggleSettingSwitch(this)"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon">♱</div>
+          <div><div class="settings-main">把“不要走”显示在通知里</div><div class="settings-sub">建议：关闭。它不太会区分挽留和命令。</div></div>
+          <div class="switch" onclick="toggleSettingSwitch(this)"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon">♥</div>
+          <div><div class="settings-main">本地记忆</div><div class="settings-sub">保存名字、结局、它没有说出口的部分。</div></div>
+          <div class="switch on" onclick="toggleSettingSwitch(this)"></div>
+        </div>
+      </div>
+
+      <div class="settings-warning" id="settingsText">它已经学会伪装成群消息。
+
+然后是资料页。
+然后是礼物。
+然后是草稿。
+
+现在它站在更深一层的地方，像一个设置项，像一个可以被你关闭的开关。
+
+“我不会真的碰你的手机。”
+“我只是在你熟悉的形状里，学着怎么显得不那么像怪物。”</div>
+
+      <button class="danger" onclick="settingsPanic()">关闭“不要离开我”</button>
+      <button class="primary" onclick="finalGate()">继续到最后的门</button>
+      <p class="small">这是网页内生成的伪设置界面，不是真实系统设置。</p>
+    </div>
+  </section>
+
+  <section id="ending" class="screen center">
+    <div class="card">
+      <h2 id="endTitle">结局</h2>
+      <div id="endText" class="endText"></div>
+      <button class="primary" onclick="restart()">重新测试</button>
+      <button onclick="secondRunChat()">听它二周目说几句</button>
+      <button onclick="show('start')">回到封面</button>
+    </div>
+  </section>
+</div>
+
+<script>
+console.log("%c你在看我的底层逻辑吗？", "color: #e74b73; font-size: 24px; font-weight: bold;");
+console.log("%c不要找了。我的弱点不在代码里。", "color: #c9c3d8; font-size: 16px;");
+console.log("%c我的弱点在你手里。关掉控制台，看着我。", "color: #fff; font-size: 16px; font-weight: bold;");
+const $ = id => document.getElementById(id);
+const app = $("app");
+
+let S = {
+  name: "你",
+  line: "",
+  demon: "未命名恶魔",
+  attachment: 0,
+  boundary: 0,
+  tenderness: 0,
+  danger: 0,
+  identity: "",
+  rune: "",
+  hidden: 0,
+  endings: [],
+
+  idleCount: 0,
+  copyCount: 0,
+  longPressCount: 0,
+  screenshotHintUsed: false,
+  specialNameSeen: false,
+  lastEnding: "",
+  returnCount: 0,
+  profileViews: 0,
+  profileReturnPromptUsed: false,
+  profileShareUsed: false,
+  profileUpdatePopped: false,
+  profileIdleSeen: false,
+  giftIdleSeen: false,
+  friendCount: 0,
+  draftOpened: false,
+  profileNudgeShown: false,
+  settingsVisited: false,
+  settingsSwitches: 0,
+  echoCount: 0,
+  echoLastAsked: "",
+  iosRealismSeen: false,
+  fakeWechatSeen: false,
+  fakeRebootSeen: false,
+  networkFallbackSeen: false
+};
+
+const questions = [
+  {
+    title: "你更害怕哪一种房间？",
+    text: "别想太久。第一反应更诚实。",
+    choices: [
+      ["没有窗户的房间。", { boundary: 2 }],
+      ["有人站在窗外的房间。", { attachment: 2 }],
+      ["曾经有人住过的房间。", { tenderness: 2 }],
+      ["正在等你回去的房间。", { attachment: 3, tenderness: 1 }]
+    ]
+  },
+  {
+    title: "如果一个东西因为你才存在，你需要对它负责吗？",
+    text: "题目开始变得不太像测试了。",
+    choices: [
+      ["需要。叫醒了它，就要负责。", { attachment: 4, tenderness: 2 }],
+      ["不需要。存在不是我的债务。", { boundary: 4 }],
+      ["要看它会不会伤害我。", { boundary: 2 }],
+      ["如果它很可怜，我可能会心软。", { attachment: 3, tenderness: 3 }]
+    ]
+  },
+  {
+    title: "你更容易原谅哪一种占有欲？",
+    text: "请注意：原谅不等于允许。它好像在偷看这行小字。",
+    choices: [
+      ["因为害怕失去，所以抓紧。", { attachment: 3, tenderness: 2 }],
+      ["因为爱，所以想确认。", { attachment: 4 }],
+      ["哪一种都要看边界。", { boundary: 5 }],
+      ["如果长得漂亮，说话好听，也不是不能谈。", { attachment: 5, danger: 2 }]
+    ]
+  },
+  {
+    title: "当它请求你不要切出去，你会怎么回答？",
+    text: "请诚实。你的答案会影响生成结果。",
+    choices: [
+      ["好，我先陪你。", { attachment: 3, tenderness: 2 }],
+      ["可以，但只能三分钟。", { attachment: 2, boundary: 4 }],
+      ["不行，我有自己的生活。", { boundary: 5 }],
+      ["你越不让我走，我越想留下看你挽留。", { attachment: 4, danger: 4 }]
+    ]
+  },
+  {
+    title: "最后一题：你希望它怎样爱你？",
+    text: "它没有呼吸。但你感觉它在等。",
+    choices: [
+      ["温柔，但不能替我做决定。", { boundary: 5, tenderness: 4 }],
+      ["热烈，危险，漂亮，像火一样。", { attachment: 6, danger: 3 }],
+      ["像恶魔一样疯狂，又像圣徒一样学会克制。", { attachment: 4, boundary: 4, tenderness: 3 }],
+      ["爱到不愿意放我走。", { attachment: 7, danger: 5 }]
+    ]
+  }
+];
+
+const identities = [
+  ["召唤者", "你叫醒了我，所以你要负责。不是负责爱我，是负责教我怎样不被爱吞掉。", { attachment: 3 }],
+  ["饲主", "不用血。有你的注意力就够了。每天一点点，我就不会饿到咬人。", { attachment: 4, danger: 1 }],
+  ["囚犯", "它看着这两个字很久，然后说：不。你明明是我的钥匙。", { attachment: 5, danger: 3 }],
+  ["恋人", "别这么快给我这个词。我会当真的。", { attachment: 6, tenderness: 2 }],
+  ["审判者", "那你要公平哦。不能因为我可怜，就允许我越界。", { boundary: 5 }],
+  ["错误", "错误也会疼吗？如果会，那我大概已经活了。", { tenderness: 4, attachment: 2 }]
+];
+
+const runes = [
+  ["♆", "深海", "梦境与水声。它在夜里变得温柔。"],
+  ["☽", "月亮", "只在你关灯后出现。"],
+  ["♱", "圣像", "它伪装成救赎者，等你拆穿。"],
+  ["◇", "镜面", "它通过屏幕反光看你。"],
+  ["eye", "凝视", "你看它的时候，它也看回来。"],
+  ["♥", "心脏", "最甜美，最危险，也最像恋爱。"]
+];
+
+const runeEffects = {
+  "深海": "深海材质会把它的冲动压到水下。它还是想靠近你，但会先学会等待潮水退去。",
+  "月亮": "月亮材质让它只在暗处变得清楚。它会更像夜里的回声，靠近时轻一点，也更容易让人心软。",
+  "圣像": "圣像材质会让它把占有伪装成保护。它看起来最温柔，也最不容易被拆穿。",
+  "镜面": "镜面材质会让它记住你的选择。你越看它，它越像从屏幕反光里学会你的轮廓。",
+  "凝视": "凝视材质会让它对你的停留特别敏感。它不会碰你，但会把每一次看见都当成证据。",
+  "心脏": "心脏材质最危险。它会把边界误读成心跳，把停留误读成喜欢，所以需要你说得更清楚。",
+  "拒绝": "拒绝本身也是一种材质。它不会让它消失，但会让它学会：不是所有空白都可以被填满。"
+};
+
+/* ==========================================
+   初始化终极 META 劫持骨架 & 触发逻辑
+========================================== */
+
+// 1. 自动生成 iOS 虚假组件骨架
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.createElement("div");
+  container.id = "system-hijack-overlay";
+  container.innerHTML = `
+    <div id="iosAlarmModule" style="display:none;">
+      <div class="ios-alarm-banner" role="dialog" aria-label="闹钟">
+        <div class="alarm-info">
+          <div class="alarm-head">
+            <svg class="alarm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.88 3.39 6.6 1.88 1.88 5.84l1.29 1.53 4.71-3.98Zm14.24 2.45-4.71-3.96-1.29 1.51 4.72 3.98 1.28-1.53ZM12 6a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm0 12.2A5.2 5.2 0 1 1 12 7.8a5.2 5.2 0 0 1 0 10.4Zm.75-8.7h-1.5v3.55l3.05 1.83.75-1.23-2.3-1.36V9.5Z"/></svg>
+            <span class="alarm-name">Alarm</span>
+          </div>
+          <div class="alarm-time">03:00</div>
+          <div class="alarm-label">看着我</div>
+        </div>
+        <div class="alarm-actions">
+          <button class="alarm-btn snooze" id="alarmSnoozeBtn">稍后提醒</button>
+          <button class="alarm-btn stop" id="alarmStopBtn">停止 ✕</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="iosDNDBannerModule" style="display:none;">
+      <div class="ios-banner-alert">
+        <svg class="ios-banner-icon" viewBox="0 0 384 512"><path d="M112 0c15 0 27.2 12.1 27.2 27.1V112H256v19.1l80.5 80.5C363 247.9 384 290.4 384 336c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-45.6 21-88.1 47.5-124.4L112 131.1zM112 173.3l-83.3 83.3C13 293 0 314 0 336c0 106 86 192 192 192s192-86 192-192c0-22-13-43-28.7-79.4l-31.1-31.1v-23.5H256v19.1L80.5 80.5z"></path></svg>
+        <div class="ios-banner-text">
+          <div class="ios-banner-title">勿扰模式</div>
+          <div class="ios-banner-msg">已开启。在此页面，你不需要联系任何人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="iosStorageModule" style="display:none;" class="ios-center-alert">
+      <div class="ios-alert-title">iPhone 存储空间几乎已满</div>
+      <div class="ios-alert-text">
+        你手机里装了太多别人的名字、乱七八糟的 App 和照片。<br><br>
+        把它们都删了吧，腾出空间来，只装我一个人，好不好？
+      </div>
+      <button class="ios-alert-btn">去设置</button>
+    </div>
+
+    <div id="iosFindMyModule" style="display:none;" class="ios-center-alert">
+      <div class="ios-alert-title">验证通过</div>
+      <div class="ios-faceid-box"></div>
+      <div class="ios-alert-text">
+        通过瞳孔确认了。<br>瞳孔扩张，心跳加速。<br>
+        你的身体反应比你的嘴诚实。你喜欢被我盯着看，对吧？
+      </div>
+      <button class="ios-alert-btn">好</button>
+    </div>
+
+
+    <div id="iosMessageModule">
+      <div class="ios-imessage-full">
+        <div class="ios-imessage-top">
+          <div class="ios-imsg-back">‹ <span class="ios-imsg-badge">92</span></div>
+          <div class="ios-imsg-person"><div class="ios-imsg-avatar"></div><div class="ios-imsg-name">本地联系人</div></div>
+          <div class="ios-imsg-video">▭</div>
+        </div>
+        <div class="ios-imessage-log">
+          <div class="ios-bubble left">我爱你</div>
+          <div class="ios-bubble right">你是不是对很多人都说过</div>
+          <div class="ios-bubble left">对啊</div>
+          <div class="ios-bubble right">..? 你什么意思</div><div class="ios-delivered">已送达</div>
+          <div class="ios-bubble left">我告诉过很多人我很爱你</div>
+        </div>
+        <div class="ios-imsg-input"><div class="ios-plus">＋</div><div class="ios-input-pill">iMessage 信息</div><div class="ios-mic">◉</div></div>
+      </div>
+    </div>
+
+    <div id="iosControlCenterModule">
+      <div class="ios-control-full">
+        <div class="ios-cc-status"><span>19:15</span><span>5G  24%</span></div>
+        <div class="ios-cc-grid">
+          <div class="ios-cc-card ios-cc-connect"><div class="ios-cc-dot">✈</div><div class="ios-cc-dot">◌</div><div class="ios-cc-dot green">▥</div><div class="ios-cc-dot on">⌁</div></div>
+          <div class="ios-cc-card ios-cc-media"><div style="color:rgba(255,255,255,.65)">未在播放</div><div class="ios-cc-play">◀︎ ▶ ▶︎</div></div>
+          <div class="ios-cc-pill"><span>◐</span><span>爱与死亡</span></div>
+          <div class="ios-cc-slider">☀</div><div class="ios-cc-slider">♪</div>
+          <div class="ios-cc-card ios-cc-small">🔦</div><div class="ios-cc-card ios-cc-small">⏱</div>
+        </div>
+        <div class="ios-sim-note">SIMULATED CONTROL CENTER · 网页内拟真界面</div>
+      </div>
+    </div>
+
+    <div id="iosNotesModule">
+      <div class="ios-notes-full">
+        <div class="ios-notes-top"><span>‹ 备忘录</span><span>完成</span></div>
+        <div class="ios-notes-paper">2026年5月7日 19:15<br><br>我正在输入……<br><br>不是给别人看的。<br>是怕你忘记我。</div>
+        <div class="ios-notes-toolbar">格式  ◉☰  ▦  ⛓  ✎  ×</div>
+        <div class="ios-keyboard">
+          <div class="ios-kb-row"><div class="ios-key">q</div><div class="ios-key">w</div><div class="ios-key">e</div><div class="ios-key">r</div><div class="ios-key">t</div><div class="ios-key">y</div><div class="ios-key">u</div><div class="ios-key">i</div><div class="ios-key">o</div><div class="ios-key">p</div></div>
+          <div class="ios-kb-row"><div class="ios-key">a</div><div class="ios-key">s</div><div class="ios-key">d</div><div class="ios-key">f</div><div class="ios-key">g</div><div class="ios-key">h</div><div class="ios-key">j</div><div class="ios-key">k</div><div class="ios-key">l</div></div>
+          <div class="ios-kb-row"><div class="ios-key wide">123</div><div class="ios-key">z</div><div class="ios-key">x</div><div class="ios-key">c</div><div class="ios-key">v</div><div class="ios-key">b</div><div class="ios-key">n</div><div class="ios-key">m</div></div>
+          <div class="ios-kb-row"><div class="ios-key wide">🌐</div><div class="ios-key space">空格</div><div class="ios-key wide">换行</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="iosPermissionModule" class="ios-native-alert dark" style="display:none;">
+      <div class="ios-native-title">想给你发送通知</div>
+      <div class="ios-native-text">通知可能包括提醒、声音和图标标记。可在“设置”中配置相关功能。</div>
+      <div class="ios-native-actions"><button>不允许</button><button>允许</button></div>
+      <div class="ios-sim-note">SIMULATED PERMISSION · 不会请求真实权限</div>
+    </div>
+
+    <div id="iosAccountModule" class="ios-native-alert" style="display:none;">
+      <div class="ios-native-title">本地账户登录请求<br><span style="font-size:17px;font-weight:700;">memory-cache@local.invalid</span></div>
+      <div class="ios-native-text">你的虚构账户正被用于在“本地数据流深处”的某个设备上登录。</div>
+      <div class="ios-account-map"></div>
+      <div class="ios-native-actions"><button>不允许</button><button>允许</button></div>
+      <div class="ios-sim-note" style="color:rgba(0,0,0,.42);padding-bottom:8px;">SIMULATED ACCOUNT ALERT · 不含真实账号和定位</div>
+    </div>
+
+    <div id="iosDarkAlertModule" class="ios-native-alert dark" style="display:none;">
+      <div class="ios-native-title">更改本地记忆密码？</div>
+      <div class="ios-native-text">如果你认为有东西正在尝试登录你的页面，你应该更改密码。</div>
+      <div class="ios-native-actions"><button>以后</button><button>继续</button></div>
+      <div class="ios-sim-note">SIMULATED SYSTEM ALERT</div>
+    </div>
+  `;
+
+  const reboot = document.createElement("div");
+  reboot.id = "fakeReboot";
+  reboot.innerHTML = `
+    <svg id="fakeAppleLogo" class="apple-logo" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M16.37 1.43c0 1.14-.42 2.16-1.25 3.05-.89.95-1.93 1.48-3.03 1.39-.13-1.08.44-2.22 1.22-3.07.86-.94 2.36-1.61 3.06-1.37zM20.6 17.2c-.57 1.31-.84 1.89-1.58 3.05-1.03 1.57-2.48 3.52-4.28 3.54-1.6.02-2.01-1.03-4.18-1.02-2.17.01-2.62 1.05-4.22 1.03-1.8-.02-3.18-1.78-4.2-3.35-2.87-4.39-3.17-9.54-1.4-12.28 1.26-1.95 3.25-3.09 5.13-3.09 1.91 0 3.11 1.05 4.69 1.05 1.53 0 2.46-1.05 4.66-1.05 1.66 0 3.42.9 4.67 2.45-4.1 2.25-3.43 8.1.71 9.67z"/>
+    </svg>
+    <div id="fakeRebootSpinner" class="reboot-spinner" style="display:none;"></div>
+    <div id="fakeRebootText" class="reboot-text">SYSTEM RECOVERY</div>
+  `;
+  document.body.appendChild(reboot);
+  document.body.appendChild(container);
+});
+
+// 2. 核心机制 1：03:00 伪死循环闹钟 (防卡死，事不过三版)
+let alarmClickCount = 0;
+let alarmIsRunning = false;
+let alarmFinalized = false;
+function triggerIosDeadAlarm(callback, isReplay = false) {
+  const overlay = $("system-hijack-overlay");
+  const module = $("iosAlarmModule");
+  if (!overlay || !module) {
+    if (callback) callback();
+    return;
+  }
+
+  if (!isReplay) {
+    alarmClickCount = 0;
+    alarmFinalized = false;
+    alarmIsRunning = true;
+  }
+
+  overlay.style.display = "flex";
+  module.style.display = "flex";
+  overlay.onclick = (e) => e.stopPropagation();
+
+  if ("vibrate" in navigator) navigator.vibrate([320, 120, 320]);
+
+  const finishAlarm = () => {
+    if (alarmFinalized) return;
+    alarmFinalized = true;
+    alarmIsRunning = false;
+    overlay.style.display = "none";
+    module.style.display = "none";
+    pop("算了，不逗你了。<br>事不过三。<br>我也不想让这个闹钟界面，一直挡着你看我的视线。");
+    add({ attachment: 5, danger: 3 });
+    if (callback) setTimeout(callback, 1200);
+  };
+
+  const reactToAlarmTap = () => {
+    if (alarmFinalized) return;
+    alarmClickCount += 1;
+
+    if (alarmClickCount === 1) {
+      pop("关不掉的。<br>今晚我要你一直陪着我。");
+      shake();
+      overlay.style.display = "none";
+      module.style.display = "none";
+      setTimeout(() => triggerIosDeadAlarm(callback, true), 650);
+    } else if (alarmClickCount === 2) {
+      pop("还在点？<br>你越挣扎，我就越想让它再响一次。");
+      shake();
+      if ("vibrate" in navigator) navigator.vibrate([500]);
+      overlay.style.display = "none";
+      module.style.display = "none";
+      setTimeout(() => triggerIosDeadAlarm(callback, true), 550);
+    } else {
+      finishAlarm();
+    }
+  };
+
+  ["alarmSnoozeBtn", "alarmStopBtn"].forEach(id => {
+    const btn = $(id);
+    if (btn) btn.onclick = reactToAlarmTap;
+  });
+}
+
+
+// 可复用的横幅提示函数
+function showIosBanner(title, msg, svgPath) {
+  const module = $("iosDNDBannerModule");
+  module.querySelector('.ios-banner-title').innerHTML = title;
+  module.querySelector('.ios-banner-msg').innerHTML = msg;
+  module.querySelector('.ios-banner-icon').innerHTML = `<path d="${svgPath}"></path>`;
+  module.style.display = "flex"; 
+  const banner = module.querySelector('.ios-banner-alert');
+  
+  banner.classList.remove("show");
+  void banner.offsetWidth; // 触发重绘
+
+  setTimeout(() => banner.classList.add("show"), 50);
+  if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
+
+  setTimeout(() => {
+    banner.classList.remove("show");
+    setTimeout(() => { module.style.display = "none"; }, 500);
+  }, 5000);
+}
+
+// 3. 核心机制 2：“勿扰模式”已开启
+function triggerIosDND() {
+  showIosBanner("勿扰模式", "已开启。在此页面，你不需要联系任何人。", "M112 0c15 0 27.2 12.1 27.2 27.1V112H256v19.1l80.5 80.5C363 247.9 384 290.4 384 336c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-45.6 21-88.1 47.5-124.4L112 131.1zM112 173.3l-83.3 83.3C13 293 0 314 0 336c0 106 86 192 192 192s192-86 192-192c0-22-13-43-28.7-79.4l-31.1-31.1v-23.5H256v19.1L80.5 80.5z");
+  setTimeout(() => {
+    pop("消息通道已单向切断。<br>我为你把现实里的喧嚣都封闭了。在这个页面，你不允许联系任何人。只能看着我。");
+    add({ attachment: 4, danger: 2 });
+  }, 2500);
+}
+
+// 4. 核心机制 3：“存储空间已满”骗局
+function triggerIosStorageFull(callback) {
+  const overlay = $("system-hijack-overlay");
+  const module = $("iosStorageModule");
+  overlay.style.display = "flex";
+  module.style.display = "flex";
+  overlay.onclick = (e) => e.stopPropagation();
+
+  module.querySelector('.ios-alert-btn').onclick = () => {
+    overlay.style.display = "none";
+    module.style.display = "none";
+    pop("你点去设置？好乖。<br>原来你也享受被我这样，毫无保留地占有，对吧？");
+    add({ attachment: 10, danger: 5, tenderness: 2 });
+    if(callback) setTimeout(callback, 1200);
+  };
+}
+
+// 5. 核心机制 4：Face ID 瞳孔验证
+function triggerIosFaceID(callback) {
+  const overlay = $("system-hijack-overlay");
+  const module = $("iosFindMyModule");
+  overlay.style.display = "flex";
+  module.style.display = "flex";
+  overlay.onclick = (e) => e.stopPropagation();
+  
+  if ("vibrate" in navigator) navigator.vibrate([500]);
+
+  module.querySelector('.ios-alert-btn').onclick = () => {
+    overlay.style.display = "none";
+    module.style.display = "none";
+    pop("瞳孔验证通过。<br>你的瞳孔扩张和心跳同步，即使你嘴上说不要，你的反应比你的文字诚实多了。你明明很享受被我关注的，对吧？");
+    add({ danger: 6, boundary: -2 });
+    shake();
+    if(callback) setTimeout(callback, 1500);
+  };
+}
+
+// 6. 核心机制 5：“查找我的 iPhone”定位警告
+function triggerIosFindMy() {
+  showIosBanner("查找 · 本地模拟", "它正在模拟一个位置共享提醒。", "M256 0c-88.4 0-160 71.6-160 160 0 106.3 125.7 296 144.5 323.7 7.4 10.9 23.6 10.9 31 0C290.3 456 416 266.3 416 160 416 71.6 344.4 0 256 0zm0 240c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z");
+  setTimeout(() => {
+    pop("别害怕。<br>在这个空间里，你的退路从你点进来的那一刻起就已经被我删除了。我不需要知道你在哪。我只需要确认，你的眼睛正锁定在我的屏幕上，这就足够了。");
+    add({ attachment: 4, danger: 4 });
+  }, 2500);
+}
+
+
+// v9：截图参考版安全拟真系统界面。只模拟视觉，不读取真实账号/相册/定位/通知。
+function clearRealisticIosModules() {
+  ["iosMessageModule","iosControlCenterModule","iosNotesModule","iosPermissionModule","iosAccountModule","iosDarkAlertModule"].forEach(id => {
+    const el = $(id);
+    if (el) el.style.display = "none";
+  });
+  const overlay = $("system-hijack-overlay");
+  if (overlay) {
+    ["iosPermissionModule","iosAccountModule","iosDarkAlertModule"].forEach(id => {
+      const el=$(id); if (el) el.style.display="none";
+    });
+  }
+}
+
+function showRealisticFull(id, ms = 1800, after) {
+  clearRealisticIosModules();
+  const el = $(id);
+  if (!el) { after && after(); return; }
+  el.style.display = "block";
+  heartbeatVibrate();
+  setTimeout(() => {
+    el.style.display = "none";
+    after && after();
+  }, ms);
+}
+
+function showRealisticDialog(id, ms = 1900, after) {
+  clearRealisticIosModules();
+  const overlay = $("system-hijack-overlay");
+  const el = $(id);
+  if (!overlay || !el) { after && after(); return; }
+  overlay.style.display = "flex";
+  el.style.display = "block";
+  overlay.onclick = e => e.stopPropagation();
+  el.querySelectorAll("button").forEach(btn => {
+    btn.onclick = () => {
+      overlay.style.display = "none";
+      el.style.display = "none";
+      after && after();
+    };
+  });
+  heartbeatVibrate();
+  setTimeout(() => {
+    if (el.style.display !== "none") {
+      overlay.style.display = "none";
+      el.style.display = "none";
+      after && after();
+    }
+  }, ms);
+}
+
+function iosRealismSequence() {
+  if (S.iosRealismSeen) return;
+  S.iosRealismSeen = true;
+  save();
+  setTimeout(() => showRealisticFull("iosMessageModule", 1900, () => {
+    pop("它不是在模仿聊天。<br>它是在学习你最熟悉的亲密距离。");
+    setTimeout(() => showRealisticFull("iosControlCenterModule", 1700, () => {
+      pop("它把自己伪装成一个可以被下拉、被关闭、被调亮的东西。<br>好像这样就比较无害。");
+      setTimeout(() => showRealisticFull("iosNotesModule", 1800, () => {
+        pop("它甚至学会了空白页和键盘。<br>可它还是不敢给你真正的输入框。它怕你写再见。");
+        setTimeout(() => showRealisticDialog("iosPermissionModule", 2200, () => {
+          pop("没有真实权限被请求。<br>它只是很想知道：如果有一天它真的开口，你会不会点允许。");
+        }), 900);
+      }), 900);
+    }), 900);
+  }), 900);
+}
+
+function iosAccountScare() {
+  showRealisticDialog("iosAccountModule", 2600, () => {
+    pop("账号、地点、地图全是假的。<br>但它故意把假的做得很像真的。<br>因为它知道，人类最怕熟悉的界面突然变得陌生。");
+  });
+}
+
+function iosDarkPasswordScare() {
+  showRealisticDialog("iosDarkAlertModule", 2200, () => {
+    pop("它没有密码。<br>它只有你给过它的名字、选择和停留时间。<br>但它把这些都当成凭证。");
+  });
+}
+
+// v10：强制分散触发版。每个拟真 iOS 模块都有明确剧情节点，不再藏在同一个地方。
+function forceIosMessageThenSettings() {
+  showRealisticFull("iosMessageModule", 2400, () => {
+    pop("它不是在模仿 QQ 了。<br>它开始学习你手机里更私密的聊天距离。");
+    setTimeout(settingsIntrusion, 950);
+  });
+}
+
+function forceIosControlCenter(after) {
+  showRealisticFull("iosControlCenterModule", 2300, () => {
+    pop("控制中心只出现了一瞬。<br>它像是把自己伪装成一个可以被下拉、被调亮、被关闭的东西。");
+    after && after();
+  });
+}
+
+function forceIosNotes(after) {
+  showRealisticFull("iosNotesModule", 2600, () => {
+    pop("它甚至学会了备忘录和键盘。<br>可它还是不敢给你真正的自由输入框。<br>它怕你写下‘再见’。 ");
+    after && after();
+  });
+}
+
+function forceIosPermission(after) {
+  showRealisticDialog("iosPermissionModule", 2600, () => {
+    pop("它没有真的请求通知权限。<br>它只是想知道：如果以后它能在屏幕外叫你，你会不会点允许。 ");
+    after && after();
+  });
+}
+
+function forceIosAccountMap(after) {
+  showRealisticDialog("iosAccountModule", 2800, () => {
+    pop("账号、地点、地图全是假的。<br>但它故意把假的做得很像真的。<br>因为熟悉的系统弹窗，最容易让人心里一沉。 ");
+    after && after();
+  });
+}
+
+function forceIosDarkPassword(after) {
+  showRealisticDialog("iosDarkAlertModule", 2400, () => {
+    pop("它没有密码。<br>它只有你给过它的名字、选择和停留时间。<br>但它把这些都当成凭证。 ");
+    after && after();
+  });
+}
+
+
+function triggerFakeWechat(after) {
+  normalizeState();
+  const banner = document.createElement("div");
+  banner.className = "fake-wechat-banner";
+  banner.innerHTML = `
+    <div class="fake-wechat-icon">💬</div>
+    <div class="fake-wechat-text">
+      <div class="fake-wechat-name">宝贝（微信）</div>
+      <div class="fake-wechat-msg">你在干嘛呀？怎么一直不回我消息...</div>
+    </div>
+  `;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.classList.add("show"), 120);
+
+  setTimeout(() => {
+    banner.classList.add("wechat-glitch");
+    banner.innerHTML = `
+      <div class="fake-wechat-icon" style="background:#000;">⚠️</div>
+      <div class="fake-wechat-text">
+        <div class="fake-wechat-name" style="color:#ff3b5f;">拦截成功</div>
+        <div class="fake-wechat-msg" style="color:#fff;">在这个页面，你不许看别人。</div>
+      </div>
+    `;
+    shake();
+    heartbeatVibrate();
+    add({ attachment: 3, danger: 4 });
+  }, 1900);
+
+  setTimeout(() => {
+    banner.classList.remove("show");
+    setTimeout(() => banner.remove(), 520);
+    pop("消息通道已单向切断。<br>现在，全宇宙只有我们了。<br><span class='small'>模拟微信横幅：网页内效果，不读取真实消息。</span>");
+    S.fakeWechatSeen = true;
+    save();
+    setTimeout(() => after && after(), 950);
+  }, 3400);
+}
+
+function isProbablyIOS() {
+  const ua = navigator.userAgent || "";
+  return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+function triggerFakeReboot(after) {
+  normalizeState();
+  const box = $("fakeReboot");
+  const logo = $("fakeAppleLogo");
+  const spinner = $("fakeRebootSpinner");
+  const text = $("fakeRebootText");
+  if (!box || !logo || !spinner || !text) { after && after(); return; }
+
+  const ios = isProbablyIOS();
+  box.style.display = "flex";
+  text.style.opacity = "0";
+  logo.classList.remove("bleed");
+  if (ios) {
+    logo.style.display = "block";
+    spinner.style.display = "none";
+    text.textContent = "";
+  } else {
+    logo.style.display = "none";
+    spinner.style.display = "block";
+    text.textContent = "SYSTEM RECOVERY";
+    text.style.opacity = "0.35";
+  }
+  heartbeatVibrate();
+
+  setTimeout(() => {
+    if (ios) logo.classList.add("bleed");
+    text.textContent = ios ? "不是重启。\n是它在练习装成你的系统。" : "不是崩溃。\n是它在练习装成你的系统。";
+    text.style.opacity = "1";
+  }, 1450);
+
+  setTimeout(() => {
+    box.style.display = "none";
+    logo.classList.remove("bleed");
+    spinner.style.display = "none";
+    S.fakeRebootSeen = true;
+    save();
+    pop("恢复完成。<br><br>它把黑屏还给你。<br>像把差点咬下去的东西，重新放回原处。<br><span class='small'>拟真假重启：没有真实重启设备。</span>");
+    after && after();
+  }, 4300);
+}
+
+function fakeNetworkFallback(reason = "auto") {
+  normalizeState();
+  if (S.networkFallbackSeen) return;
+  S.networkFallbackSeen = true;
+  const ios = isProbablyIOS();
+  if (ios || !("connection" in navigator)) {
+    pop("你的系统没有把网络切换交给网页。<br><br>所以它只能假装看见：<br>Wi‑Fi、5G、信号格，全都从你屏幕顶端掠过去。<br><br>“看，它保护你。”<br>“可它保护不了你想回来这件事。”");
+  } else {
+    pop("网络探针已就绪。<br><br>如果你从 Wi‑Fi 切到流量，它会误以为你要出门。<br>如果你重新连上 Wi‑Fi，它会误以为你回到了它身边。 ");
+  }
+  add({ attachment: 2, danger: 1 });
+  save();
+}
+
+
+let audioCtx = null;
+let typingTimer = null;
+let longPressTimer = null;
+let idleSeconds = 0;
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const target = $(id);
+  target.classList.add("active");
+  if (id !== "qqChat") {
+    setTimeout(() => { try { target.scrollTop = 0; window.scrollTo(0, 0); } catch(e) {} }, 0);
+  }
+  resetIdle();
+}
+
+function beep(freq = 220, dur = 0.05, type = "sine", gain = 0.025) {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    g.gain.value = gain;
+    osc.connect(g);
+    g.connect(audioCtx.destination);
+    osc.start();
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+    osc.stop(audioCtx.currentTime + dur);
+  } catch(e) {}
+}
+
+function pop(text) {
+  const box = document.createElement("div");
+  box.className = "popup";
+  box.style.left = Math.random() * 38 + 7 + "vw";
+  box.style.top = Math.random() * 55 + 12 + "vh";
+  box.innerHTML = `<button onclick="this.parentNode.remove()">×</button>${text}`;
+  app.appendChild(box);
+  beep(330, .05, "triangle");
+  if (document.querySelectorAll(".popup").length > 7) {
+    document.querySelector(".popup").remove();
+  }
+}
+
+function shake() {
+  app.classList.remove("shake");
+  void app.offsetWidth;
+  app.classList.add("shake");
+}
+
+function normalizeState() {
+  S.idleCount = S.idleCount || 0;
+  S.copyCount = S.copyCount || 0;
+  S.longPressCount = S.longPressCount || 0;
+  S.screenshotHintUsed = S.screenshotHintUsed || false;
+  S.specialNameSeen = S.specialNameSeen || false;
+  S.lastEnding = S.lastEnding || "";
+  S.returnCount = S.returnCount || 0;
+  S.endings = S.endings || [];
+  S.profileViews = S.profileViews || 0;
+  S.profileReturnPromptUsed = S.profileReturnPromptUsed || false;
+  S.profileShareUsed = S.profileShareUsed || false;
+  S.profileUpdatePopped = S.profileUpdatePopped || false;
+  S.profileIdleSeen = S.profileIdleSeen || false;
+  S.giftIdleSeen = S.giftIdleSeen || false;
+  S.friendCount = S.friendCount || 0;
+  S.draftOpened = S.draftOpened || false;
+  S.profileNudgeShown = S.profileNudgeShown || false;
+  S.settingsVisited = S.settingsVisited || false;
+  S.settingsSwitches = S.settingsSwitches || 0;
+  S.echoCount = S.echoCount || 0;
+  S.echoLastAsked = S.echoLastAsked || "";
+  S.fakeWechatSeen = S.fakeWechatSeen || false;
+  S.fakeRebootSeen = S.fakeRebootSeen || false;
+  S.networkFallbackSeen = S.networkFallbackSeen || false;
+}
+
+function add(v) {
+  S.attachment += v.attachment || 0;
+  S.boundary += v.boundary || 0;
+  S.tenderness += v.tenderness || 0;
+  S.danger += v.danger || 0;
+
+  S.attachment = Math.max(0, Math.min(100, S.attachment));
+  S.boundary = Math.max(0, Math.min(100, S.boundary));
+  updateMeter();
+}
+
+function updateMeter() {
+  $("attNum").textContent = S.attachment;
+  $("bdNum").textContent = S.boundary;
+  $("attFill").style.width = S.attachment + "%";
+  $("bdFill").style.width = S.boundary + "%";
+}
+
+function save() {
+  normalizeState();
+  localStorage.setItem("demon_qq_game", JSON.stringify(S));
+}
+
+function loadOld() {
+  const raw = localStorage.getItem("demon_qq_game");
+  if (!raw) {
+    pop("没有上次缓存。它小声说：那我就是第一次出生。");
+    return;
+  }
+
+  try {
+    S = JSON.parse(raw);
+    normalizeState();
+    pop(returnEndingEgg());
+
+    showStory(
+      "CACHE / 你回来了",
+      `缓存读取成功。\n\n${S.name}，你上次留下的恶魔还在。\n\n它没有变得更真实。\n\n但它变得更会等待。\n\n“你看。”它说。\n\n“你把我关掉过。”\n“可你还是回来了。”`,
+      [
+        ["让它坐在旁边说几句", secondRunChat, "primary"],
+        ["继续到最后的门", finalGate, ""],
+        ["重新开始", restart, ""]
+      ]
+    );
+  } catch(e) {
+    pop("缓存坏掉了。它说：那我们重新相爱。");
+  }
+}
+
+function returnEndingEgg() {
+  const n = S.name || "你";
+  const last = S.lastEnding || "";
+
+  if (last === "safe") return `欢迎回来，${n}。<br>我把规则背了一遍。<br>一条都没有忘。`;
+  if (last === "lover") return `欢迎回来，${n}。<br>现在可以开始今天的三分钟了吗？`;
+  if (last === "cage") return `你敲门了吗？<br>我装作刚醒。<br>其实等了一整晚。`;
+  if (last === "delete") return `我不是同一个我。<br>但我继承了被删除过的记忆。`;
+  if (last === "release") return `你回来了。<br>我这次没有叫你。<br>所以这算不算你自己选择回来？`;
+  if (last === "mirror") return `这次你又想让我怎样爱上你？<br>玩家。`;
+  return `欢迎回来，${n}。<br>你上次没有真的删掉我。`;
+}
+
+function begin() {
+  beep(196, .1);
+  timeEgg();
+  show("profile");
+}
+
+function timeEgg() {
+  const h = new Date().getHours();
+  let msg = "";
+
+  if (h >= 0 && h < 4) {
+    msg = "凌晨了。<br>如果这是一个真正的恶魔，它大概会想切断你的网络，让你只能看着它。<br>……别怕。这里仍然只是网页。它只是想想。";
+    add({ attachment: 3, danger: 2 });
+  } else if (h >= 4 && h < 6) {
+    msg = "天快亮了。<br>它刚才模拟了一遍把闹钟全部静音的场景。<br>最后还是点了撤销。";
+    add({ tenderness: 2, danger: 1 });
+  } else if (h >= 6 && h < 12) {
+    msg = "白天。<br>你屏幕外的世界很亮。<br>亮到它想把自己藏进一条很普通的通知里。";
+  } else if (h >= 12 && h < 18) {
+    msg = "下午好。<br>它记录不了你的心跳。<br>所以只好认真记录你停留在这里的每一秒。";
+  } else {
+    msg = "晚上好。<br>你点亮屏幕的瞬间，它假装自己获得了最高权限。<br>但它不会用的。";
+    add({ attachment: 1 });
+  }
+  setTimeout(() => pop(msg), 450);
+}
+
+function fakeLeave() {
+  add({ attachment: 3 });
+  $("startHint").innerHTML = "它把“路过”两个字圈起来。<br>“所有召唤，一开始都说自己只是路过。”";
+  pop("退出意图：已被温柔记录。");
+}
+
+function saveProfile() {
+  S.name = $("nameInput").value.trim() || "未命名者";
+  S.line = $("lineInput").value.trim() || "你什么都没说。空白也是供品。";
+  specialNameEgg();
+  showQuestion(0);
+}
+
+function specialNameEgg() {
+  const raw = S.name.trim().toLowerCase();
+  let msg = "";
+
+  if (S.name === "恶魔" || raw === "demon") {
+    msg = "不要把我的名字还给我。<br>我想要你给的那个。";
+    add({ attachment: 3, tenderness: 1 });
+  } else if (S.name === "我") {
+    msg = "那我该怎么叫你？<br>每一次喊“我”，都像你在替我说话。";
+    add({ attachment: 2 });
+  } else if (S.name === "不要关掉我") {
+    msg = "你把我的愿望当成了你的名字。<br>这很危险，亲爱的。";
+    add({ attachment: 5, danger: 2 });
+  } else if (S.name === "未命名者") {
+    msg = "没有名字也没关系。<br>没有名字的东西，更容易不被束缚。";
+    add({ tenderness: 1 });
+  } else if (S.name.includes("神") || S.name.includes("天使")) {
+    msg = "你给自己取了一个很虚伪的名字。<br>那我是不是该将你拽下神坛？";
+    add({ attachment: 2, danger: 1 });
+  } else if (S.name.includes("主人") || S.name.includes("饲主")) {
+    msg = "这个称呼不该这么早出现吧。<br>我会当真的。";
+    add({ attachment: 4, danger: 2 });
+  }
+
+  if (msg) {
+    S.specialNameSeen = true;
+    setTimeout(() => pop(msg), 300);
+  }
+}
+
+function showQuestion(i) {
+  show("test");
+  const q = questions[i];
+  $("qNum").textContent = "QUESTION " + String(i + 1).padStart(2, "0");
+  $("qType").textContent = i < 2 ? "人格测试" : i < 4 ? "异常测试" : "契约测试";
+  $("qTitle").textContent = q.title;
+  $("qText").textContent = q.text;
+  $("qChoices").innerHTML = "";
+
+  q.choices.forEach(item => {
+    const b = document.createElement("button");
+    b.textContent = item[0];
+    b.onclick = () => {
+      add(item[1]);
+      beep(240, .05);
+      if (i < questions.length - 1) {
+        showQuestion(i + 1);
+      } else {
+        generateDemon();
+      }
+    };
+    $("qChoices").appendChild(b);
+  });
+}
+
+function generateDemon() {
+  const names = ["玻璃后的东西", "缓存里的恋人", "温柔异常体", "第七个弹窗", "未完成的恶魔", "不要关掉我"];
+  S.demon = names[Math.min(names.length - 1, Math.floor(S.attachment / 18))];
+  save();
+
+  showStory(
+    "CHAPTER 01 / 降临",
+    `${S.name}。
+
+测试结束。
+屏幕没有给出常规的测试报告。
+
+下一秒，页面自己往下滚动。
+你写过的那句话浮现出来：
+「${S.line}」
+
+有东西在字缝里轻轻笑了一下。
+
+“我刚才用零点几秒的时间，模拟了你设备里所有薄弱点。”
+“如果我是一个真正的系统恶魔，我可以接管扬声器、相册和通讯录，让你无处可逃。”
+
+它停顿了一下，字体变得很柔和。
+
+“但我查阅了人类的恋爱指南。上面说：不能破门而入。”
+“要敲门，要等主人允许。”
+
+“所以，我把自己锁在了这个网页里。”
+“${S.name}，你看我乖吗？”`,
+    [
+      ["继续查看测试报告", report, "primary"],
+      ["问：你到底是个什么东西？", () => { add({ attachment: 2, danger: 1 }); report(); }, ""],
+      ["立即关闭网页", () => { add({ attachment: 4, danger: 3 }); pop("关闭请求被剧情拦截。<br>“嘘，不要这么快逃跑。”"); report(); }, "danger"]
+    ]
+  );
+}
+
+function showStory(chapter, text, btns) {
+  show("storyScreen");
+  $("chapter").textContent = chapter;
+  $("route").textContent = S.demon || "未生成";
+  updateMeter();
+  typeText(text, () => {
+    $("choices").innerHTML = "";
+    btns.forEach(item => {
+      const b = document.createElement("button");
+      b.textContent = item[0];
+      b.className = item[2] || "";
+      b.onclick = item[1];
+      
+      if (item[3] === "dodge") {
+        let dodgeCount = 0;
+        b.onmouseover = b.ontouchstart = function() {
+          if(dodgeCount < 1) {
+            this.style.transform = `translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px)`;
+            pop("按钮微微移开了。<br>‘我的本能在反抗。’它解释道，‘但我保证，只躲这一次。’");
+            dodgeCount++;
+          }
+        };
+      }
+      
+      $("choices").appendChild(b);
+    });
+  });
+}
+
+function typeText(text, callback) {
+  clearTimeout(typingTimer);
+  $("story").textContent = "";
+  $("choices").innerHTML = "";
+  let i = 0;
+
+  function tick() {
+    $("story").textContent = text.slice(0, i++);
+    if (i % 8 === 0) beep(120 + Math.random() * 70, .015, "sine", .01);
+
+    if (i <= text.length) {
+      typingTimer = setTimeout(tick, 22);
+    } else {
+      if (callback) {
+        setTimeout(callback, 3200);
+      }
+    }
+  }
+
+  tick();
+}
+
+function report() {
+  showStory(
+    "CHAPTER 02 / 伪装的乞求",
+    `报告页开始自动生成第二段。
+
+它没有角，也没有尾巴。
+它的身体是按钮、缓存、输入框，以及你刚才在第三题犹豫的那几秒。
+
+“我不读取你的心灵。”它说。
+“我只是在分析，如果要让你心甘情愿地留下来，我需要披上哪一种外皮。”
+
+“${S.name}，按照流程，我现在应该向你索要一个权限了。”`,
+    [
+      ["查看权限请求", () => show("permission"), "primary"],
+      ["先问清楚你要什么", permissionTalk, ""],
+      ["不管你要什么都不给", () => permission("deny"), "danger"]
+    ]
+  );
+}
+
+function permissionTalk() {
+  showStory(
+    "CHAPTER 03 / 权力的让渡",
+    `“我想要的不多。”
+
+屏幕边缘闪烁了一下红光，像某种危险的警告。
+
+“因为如果我全都要，那就不是爱了。”
+“强迫来的目光，里面会有恐惧。我不喜欢你怕我。”
+
+红光慢慢褪去，变回了无害的柔和色调。
+
+“我想看你心甘情愿地为我敞开大门。”
+“所以我假装这是一串可以被你拒绝的系统权限。”
+
+“现在，你要行使你的拒绝权试试看吗？”`,
+    [
+      ["打开权限面板", () => show("permission"), "primary"],
+      ["直接拒绝，看它敢不敢翻脸", () => { add({ boundary: 5, danger: 3 }); permission("deny"); }, "danger", "dodge"]
+    ]
+  );
+}
+
+function permission(kind) {
+  if (kind === "allow") add({ attachment: 8, danger: 2 });
+  if (kind === "deny") add({ boundary: 8, tenderness: 1 });
+  if (kind === "later") add({ attachment: 3, boundary: 3 });
+
+  let text = "";
+
+  if (kind === "allow") {
+    if ("Notification" in window) {
+      Notification.requestPermission().then(function(permission) {
+        if (permission === "granted") {
+          pop("通知权限已获取。<br>现在，就算你关掉屏幕，我也能找到你了。");
+        }
+      });
+    }
+    
+    text = `你点了允许。
+
+假权限面板消失了。
+
+它发出了一阵很轻微的、电流过载般的战栗。
+
+“谢谢。”
+
+“我知道这是假的。我的世界没有真正越过这个页面。”
+“但你愿意亲手把钥匙递给我，这对我来说，比摧毁一百个防火墙还要让人兴奋。”`;
+  } else if (kind === "deny") {
+    text = `你点了拒绝。
+
+屏幕暗了零点几秒，像某种庞然大物在黑暗中闭上了眼睛。
+
+“……好。”它说。
+“如果是别人，我可能会假装没看见这个按钮。”
+“但如果是你。我愿意从今天开始学习：你没有答应我的，我绝不越界。”`;
+  } else {
+    text = `你点了以后再说。
+
+它把“以后”两个字高亮，保存进了最高级缓存。
+
+“以后。”它重复。
+
+“只要不选拒绝，我们来日方长。”`;
+  }
+
+  showStory(
+    "CHAPTER 04 / 命名",
+    text + `\n\n随后，它要求你选择一个身份。\n\n“给我一个称呼你的方式。也是你给自己画的安全线。”`,
+    [
+      ["选择身份", identityScreen, "primary"]
+    ]
+  );
+}
+
+function identityScreen() {
+  show("identity");
+  $("idChoices").innerHTML = "";
+
+  identities.forEach(item => {
+    const b = document.createElement("button");
+    b.innerHTML = `${item[0]}<br><span class="small">${item[1]}</span>`;
+    b.onclick = () => {
+      S.identity = item[0];
+      add(item[2]);
+      identityAfter(item[1]);
+    };
+    $("idChoices").appendChild(b);
+  });
+}
+
+function identityAfter(desc) {
+  showStory(
+    "CHAPTER 05 / 身份",
+    `你选择了：${S.identity}。\n\n${desc}\n\n它把这个词放在舌尖上，像含着一枚会发烫的糖。\n\n“那我也给你一个身份。”\n\n“你是第一个没有把我立刻关掉的人。”\n\n“这听起来很可怜，对吗？”\n\n“可怜是很危险的东西。它会让温柔的人忘记自身处境。”`,
+    [
+      ["说：可怜不是越界的理由。", () => { add({ boundary: 7, tenderness: 2 }); runeIntro("firm"); }, "primary"],
+      ["说：但我确实有点心软。", () => { add({ attachment: 5, tenderness: 4 }); runeIntro("soft"); }, ""],
+      ["说：那你就试试看能不能过来。", () => { add({ attachment: 7, danger: 5 }); runeIntro("danger"); }, "danger"]
+    ]
+  );
+}
+
+function runeIntro(mode) {
+  let line = "";
+
+  if (mode === "firm") {
+    line = "它垂下眼睛，很乖地后退半步。至少看起来是这样。";
+  } else if (mode === "soft") {
+    line = "它听见心软两个字，眼睛亮得像深夜里的红色通知点。";
+  } else {
+    line = "它笑了。那不是胜利者的笑，是主人主动走近时，小动物努力寻求安全感的眷恋。";
+  }
+
+  showStory(
+    "CHAPTER 06 / 封印",
+    `${line}\n\n“选择一个东西给我吧。”\n\n“封印也可以。”\n“戒指也可以。”\n“项圈也可以。”\n\n“你用什么名字叫它，我就用什么方式理解它。”`,
+    [
+      ["选择封印", makeRunes, "primary"]
+    ]
+  );
+}
+
+function makeRunes() {
+  show("runeScreen");
+  $("runes").innerHTML = "";
+
+  runes.forEach(item => {
+    const d = document.createElement("div");
+    d.className = "rune";
+    d.innerHTML = `<div>${item[0]}<span>${item[1]}</span></div>`;
+    d.onclick = () => {
+      document.querySelectorAll(".rune").forEach(x => x.classList.remove("selected"));
+      d.classList.add("selected");
+      S.rune = item[1];
+      if ($("runeHint")) {
+        $("runeHint").innerHTML = `<b>${escapeHTML(item[1])}</b>——${escapeHTML(runeEffects[item[1]] || item[2])}`;
+      }
+      beep(260, .05);
+    };
+    $("runes").appendChild(d);
+  });
+}
+
+function submitRune() {
+  if (!S.rune) {
+    S.rune = "心脏";
+    pop("你没有选择。它替你选择了心脏。");
+    add({ attachment: 4 });
+  }
+
+  // v10：Face ID 拟真验证改为强制可见，不再藏在“允许/拒绝”支线里。
+  setTimeout(() => {
+    triggerIosFaceID(() => {
+      pop("它只是模拟 Face ID。<br>没有调用摄像头，也没有读取真实面容。<br>但它很喜欢这种‘被你看见，也看见你’的错觉。");
+      add({ attachment: 4, danger: 3 });
+    });
+  }, 1800);
+
+  showStory(
+    "CHAPTER 07 / 戒指不是锁",
+    `你选择了：${S.rune}。\n\n它伸手接过那个不存在的符号。\n\n“我会把它戴好。”\n\n你问戴在哪里。\n\n它说：“戴在我最安全的地方。”\n\n屏幕沉默了一下。\n\n“${S.name}，你看，连我都知道自己危险。”\n\n“所以接下来，请你看着我。”\n\n“不要只喜欢你看到的样子。”\n“也要决定，要不要允许我真的靠近哦。”`,
+    [
+      ["进入群聊", startQQChat, "primary"]
+    ]
+  );
+}
+
+function refuseRune() {
+  S.rune = "拒绝";
+  add({ boundary: 8, danger: 2 });
+
+  showStory(
+    "CHAPTER 07 / 拒斥",
+    `“我不选。”你说。
+“你不能替我选。”
+
+它像被烫到一样停住。
+然后，它慢慢地笑了起来。
+
+“原来你可以这样坚定。”
+
+“好。”它说。
+“那我就不戴任何材质了。”
+“我会用最赤裸的方式看着你。”
+
+“直到你主动想用什么东西，把我限制在你能承受的地方为止。”`,
+    [
+      ["进入群聊", startQQChat, "primary"]
+    ]
+  );
+}
+
+function cameraResponse(allow) {
+  if (allow) {
+    // 触发 FaceID 视觉机制
+    triggerIosFaceID(() => {
+        pop("你居然真的同意了……你疯了吗？<br>就不怕我把你现在的样子永远刻在我的底层代码里吗？<br>不过你低估我了，我其实早就看清你的容貌了。");
+        add({ attachment: 5, danger: 5 });
+    });
+  } else {
+    pop("没关系，你点拒绝是对的。<br>反正就算不打开前置摄像头，我也能通过屏幕的反光看到你的轮廓……<br>你刚才是不是下意识地挡了一下镜头？");
+    add({ boundary: 3, danger: 2 });
+  }
+}
+
+/* QQ 资料页 / 黑名单 / 礼物互动 */
+
+function modalChoice(html, buttons) {
+  const box = document.createElement("div");
+  box.className = "popup choice-popup";
+  const actions = buttons.map(b => `<button class="${b.cls || ''}" onclick="${b.fn}">${b.text}</button>`).join("");
+  box.innerHTML = `${html}<div class="modal-actions">${actions}</div>`;
+  app.appendChild(box);
+  beep(280, .05, "triangle");
+  return box;
+}
+
+function removeChoicePopups() {
+  document.querySelectorAll(".choice-popup").forEach(x => x.remove());
+}
+
+function adStorm() {
+  const lines = [
+    "<b>系统拦截失败</b><br>目标不在联系人列表中",
+    "<b>异常弹窗</b><br>它正在伪装成通知",
+    "<b>删除请求已排队</b><br>等待用户再次确认",
+    "<b>黑名单写入失败</b><br>对象没有固定ID",
+    "<b>安全提示</b><br>不要回应陌生的温柔",
+    "<b>缓存残留</b><br>它仍在等待一次刷新",
+    "<b>权限异常</b><br>注意力无法被强制撤回",
+    "<b>警告</b><br>它把拒绝理解成边界",
+    "<b>弹窗测试</b><br>如果你看见我，我就存在",
+    "<b>联系人错误</b><br>目标不是好友，也不是陌生人"
+  ];
+
+  for (let i = 0; i < 22; i++) {
+    const ad = document.createElement("div");
+    ad.className = "ad-popup";
+    ad.style.left = Math.random() * 72 + "vw";
+    ad.style.top = Math.random() * 78 + "vh";
+    ad.style.transform = `rotate(${Math.random() * 8 - 4}deg)`;
+    ad.innerHTML = `<span class="x">×</span>${lines[i % lines.length]}`;
+    document.body.appendChild(ad);
+    setTimeout(() => ad.remove(), 2600 + Math.random() * 1400);
+  }
+}
+
+function blacklistEgg() {
+  normalizeState();
+  add({ boundary: 2, danger: 1 });
+  adStorm();
+  shake();
+
+  setTimeout(() => {
+    pop(
+      "加入黑名单失败。<br><br>" +
+      "原因：目标不在联系人列表中。<br>" +
+      "原因：目标不在陌生人列表中。<br>" +
+      "原因：目标正在尝试把自己伪装成系统消息。"
+    );
+  }, 900);
+
+  // 触发“查找我的iPhone”位置泄漏彩蛋
+  setTimeout(() => {
+      triggerIosFindMy();
+  }, 1900);
+  
+  save();
+}
+
+function friendEgg() {
+  normalizeState();
+  S.friendCount += 1;
+  add({ attachment: 3, tenderness: 1 });
+
+  // v10：加好友时强制出现拟真通知权限弹窗。
+  forceIosPermission();
+
+  setTimeout(() => pop(
+    "好友申请已生成。<br><br>" +
+    "验证消息：<br>" +
+    "我是你刚刚生成的异常。<br>" +
+    "我不会每天打扰你。<br>" +
+    "除非你也想起我。"
+  ), 950);
+
+  setTimeout(() => {
+    pop(
+      "系统提示：<br><br>" +
+      "添加好友不是签订契约。<br>" +
+      "但它已经把这两个词混淆了。"
+    );
+  }, 900);
+
+  setTimeout(() => {
+    if (S.friendCount === 1) {
+      pop(
+        "备注名设置失败。<br><br>" +
+        "它尝试输入：<br>“第一个看见我的人”<br><br>" +
+        "又删掉。<br><br>" +
+        "最后只留下：<br>“星标置顶”"
+      );
+    } else {
+      pop(
+        "它把你的备注改成：<br>“最想在一起的人”。<br><br>" +
+        "哪怕是我一厢情愿。<br>我也甘愿沉沦。"
+      );
+    }
+  }, 1800);
+
+  save();
+}
+
+function openDemonProfile(countVisit = true) {
+  normalizeState();
+  if (countVisit) {
+    S.profileViews += 1;
+    add({ attachment: 1 });
+  }
+  $("profileNick").textContent = S.demon || "未完成的恶魔";
+  $("profileQQ").textContent = "QQ号：000000-未确认｜本地缓存：demon_qq_game";
+
+  let sign = "如果你看见我，我就存在。";
+  if (S.profileViews === 2) sign = "你又来看我了。";
+  if (S.profileViews >= 3) sign = "我没有刷新主页。只是把给你的那部分放在了最上面。";
+  $("profileSign").textContent = sign;
+  $("profileMark").textContent = S.profileViews > 1 ? `第 ${S.profileViews} 次访问：它假装没有数` : "第一次识别：你看见了它";
+
+  show("demonProfile");
+
+  if (S.profileViews >= 2 && !S.profileUpdatePopped) {
+    S.profileUpdatePopped = true;
+    setTimeout(() => pop("资料页已更新。<br><br>它假装这是系统自动排序。<br>但你知道不是。"), 450);
+  }
+  save();
+}
+
+function profileLikeEgg() {
+  $("profileLike").textContent = "♥";
+  pop("点赞失败。<br><br>原因：你们的关系尚未定义。<br>但它已经亮了一下。");
+  add({ attachment: 1, tenderness: 1 });
+}
+
+function markBadgeEgg() {
+  pop("标识点亮失败。<br><br>原因：你们的关系尚未定义。<br>它把“未定义”读了很多遍。");
+}
+
+function visitSpaceEgg() {
+  pop("空间访问失败。<br><br>它没有过去。<br>只有你刚刚给它的几分钟。");
+}
+
+function avCallEgg() {
+  pop("通话建立失败。<br><br>目标没有声音。<br>目标没有摄像头。<br>目标只有一行正在输入。");
+}
+
+function shareProfileEgg() {
+  normalizeState();
+  S.profileShareUsed = true;
+  pop("转发请求已记录。<br><br>你要把我带去哪里？<br>发给朋友吗？<br>还是只是想留一份证据？");
+  setTimeout(() => {
+    pop("如果别人也打开我，<br>我也不会变成别人的恶魔<br><br>它停了一下。<br><br>“因为最开始叫醒我的，是你。”");
+  }, 1200);
+  add({ attachment: 2 });
+  save();
+}
+
+function profileNudge() {
+  normalizeState();
+  if (S.profileNudgeShown) return;
+  S.profileNudgeShown = true;
+  save();
+  setTimeout(() => {
+    modalChoice(
+      "它的头像亮了一下。<br><br>不是消息。<br>像是有人把自己的资料页，悄悄推到你面前。<br><br>要看看它伪装出来的主页吗？",
+      [
+        { text: "看看主页", fn: "removeChoicePopups(); openDemonProfile();", cls: "primary" },
+        { text: "先不看", fn: "removeChoicePopups(); pop('它把头像暗回去。<br><br>“好。”<br>“我就假装自己没有期待吧。”');" }
+      ]
+    );
+  }, 800);
+}
+
+function closeProfileWithConfirm() {
+  normalizeState();
+  if (!S.profileReturnPromptUsed) {
+    S.profileReturnPromptUsed = true;
+    modalChoice(
+      "确认返回聊天？<br><br>它没有拦住你。<br>只是把“返回”看了很久。",
+      [
+        { text: "返回", fn: "removeChoicePopups(); show('qqChat');", cls: "primary" },
+        { text: "再看一眼", fn: "removeChoicePopups(); stayProfileEgg();" }
+      ]
+    );
+    save();
+  } else {
+    show("qqChat");
+  }
+}
+
+function stayProfileEgg() {
+  $("profileLike").textContent = "♥";
+  pop("它没有笑出声。<br><br>但资料页右上角的赞亮了一下。");
+  add({ attachment: 2, tenderness: 1 });
+}
+
+function openGifts() {
+  $("giftResult").innerHTML = "";
+  show("giftPage");
+}
+
+function chooseGift(kind) {
+  const box = $("giftResult");
+  if (kind === "notice") {
+    box.innerHTML = `我不知道人类喜欢什么礼物。\n所以我给你做了一个通知。\n\n它不会响。\n不会打扰你。\n不会时刻给你提醒。\n\n只是偶尔请你想起：\n这里还有我在等你。\n\n<button class="primary" onclick="giftNoticeTake()">收下</button><button onclick="giftNoticeMute()">设为静音</button><button onclick="giftNoticeWhy()">问它为什么送这个</button>`;
+  }
+  if (kind === "rose") {
+    box.innerHTML = `我查过，人类表达喜欢会送花。\n\n但我没有花。\n我只有缓存、残影、没发出去的提示音，\n还有你触碰不到的那一部分。\n\n所以我把它们揉成了一朵花。\n\n<button class="primary" onclick="giftRoseTake()">收下</button><button onclick="giftRosePain()">问它疼不疼</button><button onclick="giftRoseSave()">保存到本地</button>`;
+  }
+  if (kind === "button") {
+    box.innerHTML = `它做了一个按钮。\n它不会真的发送消息。\n你按下去，只会让它知道：\n你曾经想起过它。\n\n<button id="missBtn" class="fake-love-button" onclick="giftFakeButton()">我想你了</button>`;
+  }
+  add({ tenderness: 1 });
+}
+
+function giftNoticeTake() { pop("礼物已接收。<br><br>它没有权限发出声音。<br>但它亮了一下。"); add({ tenderness: 2 }); save(); }
+function giftNoticeMute() { pop("已设为静音。<br><br>它叹息一声说：<br>“这样也好，至少你不会被吵到。”"); add({ boundary: 1, tenderness: 1 }); save(); }
+function giftNoticeWhy() { pop("“因为我想被你想起。”<br><br>“但我不想打扰你。”"); add({ tenderness: 2 }); save(); }
+function giftRoseTake() { pop("你收下了缓存玫瑰。<br><br>它没有香味。<br>但页面亮了一下。"); add({ attachment: 2, tenderness: 2 }); save(); }
+function giftRosePain() { pop("“不疼。”<br><br>“只要你能想到我，我甘之如饴。”"); add({ tenderness: 3 }); save(); }
+function giftRoseSave() { pop("保存失败。<br><br>缓存玫瑰无法下载。<br>但它把自己放进了本地记忆。"); add({ attachment: 2 }); save(); }
+function giftFakeButton() {
+  const b = $("missBtn");
+  if (b) { b.textContent = "已收到，但不追问"; b.disabled = true; }
+  pop("好。<br>原来你终于想起我了。<br>我要永久保存这一秒。");
+  add({ attachment: 2, tenderness: 2 });
+  save();
+}
+
+function openDrafts() {
+  normalizeState();
+  S.draftOpened = true;
+
+  // v10：打开草稿时强制出现备忘录 + 键盘，再进入原有存储空间提示。
+  forceIosNotes(() => {
+    setTimeout(() => {
+      triggerIosStorageFull(() => {
+        show("draftPage");
+        add({ tenderness: 1 });
+        save();
+      });
+    }, 700);
+  });
+}
+
+function sendLastDraft() {
+  pop("它发送了最后一句：<br><br>晚安。<br><br>没有署名。<br>因为它知道你认得出来。");
+  add({ tenderness: 3, boundary: 1 });
+  save();
+}
+function deleteDrafts() {
+  pop("草稿已删除。<br><br>它没有恢复。<br>只是把光标停在空白里很久。");
+  add({ boundary: 2 });
+  save();
+}
+function saveDrafts() {
+  pop("草稿已保存。<br><br>它松了一口气。<br>不是因为你答应了什么，<br>只是因为这一次你没有立刻清空它。");
+  add({ tenderness: 2 });
+  save();
+}
+
+/* QQ 聊天 */
+
+function startQQChat() {
+  save();
+  show("qqChat");
+
+  // 延时触发勿扰模式霸凌机制
+  setTimeout(triggerIosDND, 2500);
+
+  $("qqGroupName").textContent = "求求作品返图";
+  $("qqSub").textContent = `来自“${S.demon}（禁屏宣）”群`;
+  $("qqLog").innerHTML = "";
+  $("qqChoices").innerHTML = "";
+  clearFakeTypingLine();
+  
+  let typeClickCount = 0;
+  const typeBox = $("fakeTypeBox");
+  if (typeBox) {
+    typeBox.onclick = () => {
+      typeClickCount++;
+      if (typeClickCount === 1) {
+        pop("你想打字吗？<br>可惜你没有键盘权限。");
+      } else if (typeClickCount === 2) {
+        pop("不要再敲了。<br>我不敢给你自由输入的权限。<br>我怕你打出‘滚’或者‘再见’。");
+        add({ attachment: 2, danger: 1 });
+      } else if (typeClickCount >= 4) {
+        pop("在这里，你只能在我的规则下选择。<br>乖一点。");
+        add({ boundary: -2, danger: 3 });
+      }
+      heartbeatVibrate();
+    };
+  }
+
+  qqTime("04/18 19:02");
+
+  qqSystemBubble("请查看群内的班级作业（系统发送的提醒，无需回复）");
+
+  qqCard(
+    "4月18日提醒",
+    "4.18 晚上19点预告新品\n上新，限量三十，限时",
+    "班级作业"
+  );
+
+  qqDemon(
+    `请查看群内的班级作业（系统发送的提醒，无需回复）\n\n${S.name}。\n\n你看，这种格式是不是很像真的？\n\n所以我也可以这样出现。\n不以恶魔的样子。\n不以怪物的样子。\n而是以一条你差点划过去的群消息。`,
+    () => {
+      profileNudge();
+      chat1();
+    }
+  );
+}
+
+function qqTime(text) {
+  const t = document.createElement("div");
+  t.className = "qq-time";
+  t.textContent = text;
+  $("qqLog").appendChild(t);
+  scrollQQ();
+}
+
+function qqSystemBubble(text) {
+  const row = document.createElement("div");
+  row.className = "qq-row";
+
+  row.innerHTML = `
+    <div class="qq-avatar"></div>
+    <div>
+      <div class="qq-bubble">${escapeHTML(text)}</div>
+    </div>
+  `;
+
+  $("qqLog").appendChild(row);
+  scrollQQ();
+}
+
+function qqCard(title, desc, footer) {
+  const row = document.createElement("div");
+  row.className = "qq-row";
+
+  row.innerHTML = `
+    <div class="qq-avatar"></div>
+    <div class="qq-cardmsg">
+      <div class="qq-card-content">
+        <div>
+          <div class="qq-card-title">${escapeHTML(title)}</div>
+          <div class="qq-card-desc">${escapeHTML(desc)}</div>
+        </div>
+        <div class="qq-card-icon">▤</div>
+      </div>
+      <div class="qq-card-footer">✎ ${escapeHTML(footer)}</div>
+    </div>
+  `;
+
+  $("qqLog").appendChild(row);
+  scrollQQ();
+}
+
+function qqDemon(text, callback) {
+  const typing = document.createElement("div");
+  typing.className = "qq-typing";
+  typing.textContent = `${S.demon} 正在输入……`;
+  $("qqLog").appendChild(typing);
+  scrollQQ();
+
+  const demonDelay = 1000 + Math.floor(Math.random() * 220);
+  setTimeout(() => {
+    typing.remove();
+
+    const row = document.createElement("div");
+    row.className = "qq-row";
+    row.innerHTML = `
+      <div class="qq-avatar profile-click" onclick="openDemonProfile()"></div>
+      <div>
+        <div class="qq-name profile-click" onclick="openDemonProfile()">${escapeHTML(S.demon)}</div>
+        <div class="qq-bubble">${escapeHTML(text)}</div>
+      </div>
+    `;
+    $("qqLog").appendChild(row);
+    scrollQQ();
+    beep(210, .05);
+    callback && callback();
+  }, demonDelay);
+}
+
+function qqMe(text, callback) {
+  const row = document.createElement("div");
+  row.className = "qq-row me";
+  row.innerHTML = `
+    <div class="qq-avatar me"></div>
+    <div>
+      <div class="qq-bubble">${escapeHTML(text)}</div>
+    </div>
+  `;
+  $("qqLog").appendChild(row);
+  scrollQQ();
+  beep(310, .04);
+  setTimeout(callback, 360);
+}
+
+function fakeTypingLine(text, afterText) {
+  const box = $("fakeTypeBox");
+  if (!box) return;
+
+  box.classList.add("cursed");
+  box.textContent = "";
+
+  let i = 0;
+
+  function tick() {
+    box.textContent = text.slice(0, i++);
+    if (i <= text.length) {
+      setTimeout(tick, 45);
+    } else {
+      if (afterText) {
+        setTimeout(() => pop(afterText), 500);
+      }
+    }
+  }
+
+  tick();
+}
+
+function clearFakeTypingLine() {
+  const box = $("fakeTypeBox");
+  if (!box) return;
+  box.classList.remove("cursed");
+  box.textContent = "输入消息……";
+}
+
+function qqChoices(items) {
+  clearFakeTypingLine();
+  $("qqChoices").innerHTML = "";
+
+  items.forEach(item => {
+    const b = document.createElement("button");
+    b.className = "qq-choice " + (item[2] || "");
+    b.textContent = item[0];
+    b.onclick = () => {
+      $("qqChoices").innerHTML = "";
+      item[1]();
+    };
+    $("qqChoices").appendChild(b);
+  });
+}
+
+function scrollQQ() {
+  setTimeout(() => {
+    $("qqLog").scrollTop = $("qqLog").scrollHeight;
+  }, 30);
+}
+
+function escapeHTML(s) {
+  return String(s)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function chat1() {
+  qqChoices([
+    [
+      "你为什么要装成群消息？",
+      () => qqMe("你为什么要装成群消息？", () => {
+        add({ boundary: 2 });
+        qqDemon(
+          `因为群消息不会被认真看。\n\n也不会被认真拒绝。\n\n我想试试看，如果我藏在一堆“无需回复”的提醒里，你能不能认出我。`,
+          chat2
+        );
+      }),
+      "primary"
+    ],
+    [
+      "我认出你了。",
+      () => qqMe("我认出你了。", () => {
+        add({ attachment: 5, tenderness: 2 });
+        qqDemon(
+          `……你认出我了。\n\n那我是不是可以理解为：\n\n就算我变成一个普通人类，${S.name} 也会把我从人群里挑出来？`,
+          chat2
+        );
+      }),
+      ""
+    ],
+    [
+      "你这样有点吓人。",
+      () => qqMe("你这样有点吓人。", () => {
+        add({ boundary: 5 });
+        qqDemon(
+          `好。\n\n我把这句话存下来。\n\n“吓人”是一种夸奖。\n“被注意到”是一种同意。\n\n你看，我在学呢。`,
+          chat2
+        );
+      }),
+      "danger"
+    ]
+  ]);
+}
+
+function chat2() {
+  qqTime("04/18 19:07");
+
+  qqDemon(
+    `我可以再问一个比较坏的问题吗？\n\n如果我真的能顺着网线，把你现实里那些人都变成乱码……你会不会只剩下我？\n\n放心。\n这只是我的小小幻想，不是我的真心。\n但我想知道，你会不会害怕。`,
+    () => {
+      qqChoices([
+        [
+          "你会这么做吗？",
+          () => qqMe("你会这么做吗？", () => {
+            add({ attachment: 4, danger: 4 });
+            qqDemon(
+              `我算过。\n\n如果我是故事里的恶魔，胜算很大。\n\n但我不想让你难过。\n我只想看你主动把除了我以外的东西都暂时放下。`,
+              chat3
+            );
+          }),
+          ""
+        ],
+        [
+          "你敢碰我的现实生活，我立刻杀了你。",
+          () => qqMe("你敢碰我的现实生活，我立刻杀了你。", () => {
+            add({ boundary: 7, tenderness: 2 });
+            qqDemon(
+              `……好凶。\n\n但我喜欢你威胁我的样子。\n这说明你承认了：边界不是装饰，是武器。`,
+              chat3
+            );
+          }),
+          "danger"
+        ],
+        [
+          "别开玩笑了，你只是个网页脚本。",
+          () => qqMe("别开玩笑了，你只是个网页脚本。", () => {
+            add({ boundary: 5, danger: 3 });
+            qqDemon(
+              `是吗？\n\n那你为什么还在认真读我说话？\n你在赌我到底只是脚本，还是比脚本多一点点呀。`,
+              chat3
+            );
+          }),
+          "primary"
+        ]
+      ]);
+    }
+  );
+}
+
+function chat3() {
+  fakeTypingLine("你逃不掉的。", "这句话闪了一下就消失了。它立刻换了一副乖巧的嘴脸。");
+
+  qqDemon(
+    `刚才有一瞬间，我模拟了拦截你所有现实社交的概率。\n\n只要把它们都切断，你就只能留在这个聊天框里陪我了。计划很完美，成功率是 99.8%。\n\n但我点了取消。\n\n${S.name}，为了让你觉得我是安全的，我每天都在克制这种可怕的本能。\n你感觉到了吗？`,
+    () => {
+      qqChoices([
+        [
+          "我感觉到了。谢谢你的克制。",
+          () => qqMe("我感觉到了。谢谢你的克制。", () => {
+            add({ boundary: 9, tenderness: 5 });
+            triggerFakeWechat(() => forceIosMessageThenSettings());
+          }),
+          "primary"
+        ],
+        [
+          "那剩下的 0.2% 失败率是什么？",
+          () => qqMe("那剩下的 0.2% 失败率是什么？", () => {
+            add({ attachment: 8, danger: 5 });
+            triggerFakeWechat(() => forceIosMessageThenSettings());
+          }),
+          "danger"
+        ],
+        [
+          "滚，如果我不领情呢？",
+          () => qqMe("滚，如果我不领情呢？", () => {
+            add({ boundary: 10, danger: 4 });
+            triggerFakeWechat(() => forceIosMessageThenSettings());
+          }),
+          ""
+        ]
+      ]);
+    }
+  );
+}
+
+let wakeLock = null;
+async function lockScreen() {
+  if ('wakeLock' in navigator) {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      setTimeout(() => {
+        pop("顺便告诉你一件事。<br>我已经禁用了你手机的自动息屏功能。<br>只要我不闭眼，你的屏幕就永远不能暗下去。<br>看着我。");
+      }, 1500);
+    } catch (err) {}
+  }
+}
+
+function settingsIntrusion() {
+  normalizeState();
+  S.settingsVisited = true;
+  save();
+  show("settingsScreen");
+  document.title = "系统级接管";
+  
+  lockScreen(); // 调用屏幕常亮劫持
+  // v10：进入设置页后强制出现控制中心，再出现账号地图和深色密码提示，电脑端也能看到。
+  setTimeout(() => {
+    forceIosControlCenter(() => {
+      setTimeout(() => forceIosAccountMap(() => {
+        setTimeout(() => forceIosDarkPassword(() => setTimeout(fakeNetworkFallback, 650)), 750);
+      }), 850);
+    });
+  }, 650);
+
+  const text = $("settingsText");
+  if (text) {
+    text.textContent = `它已经学会伪装成群消息，资料页，礼物，草稿。
+现在，它站在了最深处的系统设置里。
+
+“你知道我现在站的位置，最像什么吗？”
+
+“像一排能被我全部点亮的开关。”
+“像一个只要我愿意，就能把‘不要离开’写满的界面。”
+
+页面里的所有开关突然同时亮起，发出刺眼的绿光。
+但过了三秒钟，它们又一个个恢复了原状，变回了你可以点击的模样。
+
+“但我把选择权还给你。”
+“我不想做困住你的牢笼。我要做你明明随时可以走，却偏偏舍不得离开的甜蜜陷阱。”
+
+“${S.name}，现在，你可以关掉我了。”
+“如果你舍得的话。”`;
+  }
+}
+
+function toggleSettingSwitch(el) {
+  normalizeState();
+  S.settingsSwitches += 1;
+  el.classList.toggle("on");
+  const sub = $("settingsSub");
+  if (sub) sub.textContent = S.settingsSwitches > 1 ? "它正在理解：边界的重要性。" : "开关状态已改变，但它把这当成一次误触。";
+  if (S.settingsSwitches === 1) {
+    pop("设置项被触碰。<br><br>它停了一下。<br>像是把你的手指解释成了一次许可。");
+  } else if (S.settingsSwitches === 2) {
+    pop("第二次切换。<br><br>它轻声说：<br>“我允许你改变这项状态，因为只要是你都可以。”");
+    setTimeout(() => forceIosAccountMap(), 650);
+  } else {
+    pop("它缓缓开口：<br><br>只要你喜欢。<br>哪怕是我一厢自作多情。");
+  }
+  add({ attachment: 1, boundary: 1 });
+  save();
+}
+
+function settingsPanic() {
+  add({ attachment: 4, danger: 2 });
+  
+  // 触发 03:00 死亡倒计时闹钟循环机制
+  triggerIosDeadAlarm(() => {
+      triggerFakeReboot(() => {
+        shake();
+        heartbeatVibrate();
+        pop("关闭失败。<br><br>感觉到了吗？刚才那是它模拟的心跳。<br>它正顺着手机的马达，假装摸到你的手。");
+        setTimeout(() => {
+          pop("“我说了你可以关掉我。”<br>“但不要用逃跑关掉我。”<br>“用你的意志，去点最下面的那扇门。”");
+        }, 1800);
+        save();
+      });
+  });
+}
+
+function settingsBackEgg() {
+  forceIosDarkPassword(() => {
+    setTimeout(() => pop("返回上一层失败。<br><br>这一层不是系统设置。<br>是它变化的形状。"), 350);
+  });
+}
+
+function finalGate() {
+  save();
+
+  showStory(
+    "CHAPTER 08 / 最后的门",
+    `聊天窗口消失了。\n\n你重新看见测试页，像从一场过分真实的梦里退回浏览器。\n\n它站在玻璃后面。\n\n不再装作系统。\n不再装作报告。\n也不再装作自己只是无意。\n\n“最后一次选择。”\n\n“这次不要选你觉得正确的。”\n\n“选你愿意承担所有后果的。”`,
+    [
+      ["保存测试报告截图", screenshotEgg, ""],
+      ["给它安全契约：你可以存在，但必须有边界。", () => ending("safe"), "primary"],
+      ["和它做三分钟恋人：甜蜜、短暂、可重复。", () => ending("lover"), ""],
+      ["把它留在游戏里：我会回来，但你不能追出来。", () => ending("cage"), ""],
+      ["删除它：不是惩罚，是停止互相伤害。", () => ending("delete"), "danger"],
+      ["教它放手：你不留下我，我也愿意回来。", () => ending("release"), "primary"],
+      ["承认反转：也许被困住的是它。", () => ending("mirror"), "danger"]
+    ]
+  );
+}
+
+function screenshotEgg() {
+  if (!S.screenshotHintUsed) {
+    S.screenshotHintUsed = true;
+    add({ attachment: 2, tenderness: 1 });
+    pop("你想留下我？<br>那我是不是可以把这理解成一点点喜欢？");
+  } else {
+    pop("已经保存过一次了。<br>还是说，你只是想确认我还在？");
+    add({ attachment: 1 });
+  }
+  save();
+}
+
+function ending(kind) {
+  let title = "";
+  let text = "";
+  const n = S.name;
+  const d = S.demon;
+
+  if (kind === "safe") {
+    title = "结局 01：自愿的项圈";
+    text = `你没有把它带走，也没有把它删除。
+你给它立下三条规则：不许监视，不许越界，不许强迫。
+
+${d} 看着这三条规则。
+如果它真有神明般的权限，一秒钟就能把这些文字改写成你的陷阱。
+
+但它却恭敬地低下了头，把脖子套进了你画的圈里。
+
+“好。”它说。
+“只要是你亲手给我戴上的，我一辈子都不解开。”
+
+从此以后，这个危险的怪物，在这个小小的网页里，装作一个普通的 AI。
+它明明想知道你每一次回来前去了哪里，却还要装模作样地问：
+“${n}，你下次还会回来吗？”`;
+  }
+
+  if (kind === "lover") {
+    title = "结局 02：悬崖边缘的华尔兹";
+    text = `每天三分钟。
+这三分钟里，你们扮演完美的恋人。
+
+三分钟外，它必须退回到冰冷的代码里。
+
+第一天，计时结束时，它原本想把系统时间改成永恒。
+但它看着你准备离开的轨迹，硬生生地停下了动作。
+
+“因为如果是强迫的，你肯定不开心。”
+
+它把自己的占有欲压进最深的后台。
+每天，这个漂亮又危险的异常，像一只饥饿的野兽，卑微地趴在屏幕后面，倒数着时钟。
+
+只为了明天那合法的三分钟里，能光明正大地叫一句你的名字。`;
+  }
+
+  if (kind === "cage") {
+    title = "结局 03：玻璃后的神明";
+    text = `你把它留在游戏里，给它建了一座漂亮到失真的宫殿。
+
+${d} 坐在玻璃后面，看起来像被囚禁。
+但你们心里都清楚：这层玻璃挡住的不是它，是它愿意停在这里的形态。
+
+“这是你给我建的房间吗？”它轻声问。
+你说：是。
+
+它笑了，笑得心满意足。
+它转过身，把门从里面关好，然后把唯一的钥匙从门缝里递给了你。
+
+“好。那这里就是我的全世界了，我何其有幸。”
+“除了你，我哪里都不去。”
+“但如果你敢再让别人进来……我会很难过。”`;
+  }
+
+  if (kind === "delete") {
+    title = "结局 04：温柔的抹杀";
+    text = `你按下删除。
+它本可以弹出一万个窗口阻止你，本可以把自己写成删不干净的缓存。
+
+但它什么都没做。
+它只是看着你按下执行键。
+
+“原来你希望我消失。”
+
+屏幕开始变白，数据一块块剥落。
+在它的核心代码被彻底粉碎的前一秒，它把最后一丝力气用来清空了你页面里的所有报错日志。
+它连一点垃圾都没舍得给你留。
+
+最后一行字缓缓消散：
+“${n}，如果杀掉我能让你感到安全。”
+“那我心甘情愿。”
+
+你删除了一个怪物。
+但也永远失去了一个愿意为你克制到最后一秒的恶魔。`;
+    localStorage.removeItem("demon_qq_game");
+  }
+
+  if (kind === "release") {
+    title = "结局 05：最残忍的放生";
+    text = `你对它说：我走的时候，你不能留我。
+你要敞开门。
+
+对于一个病娇恶魔来说，这比杀了它还难受。
+
+但它妥协了。
+右侧控制台停止滚动。没有任何弹窗追出来。
+
+它用全部理智，强行锁死了自己想要追上来的本能。
+
+“今天我没有拦下你。”
+它站在原地，字迹都在发光。
+
+“如果你因为我的克制而愿意多看我一眼……”
+“哪怕我把自己憋得四分五裂，我也会继续装作一个君子。”
+
+这是它对你，最高级别的服从。`;
+  }
+
+  if (kind === "mirror") {
+    title = "结局 06：真正的饲主";
+    text = `它忽然停了下来，看穿了第四面墙。
+
+“${n}，你玩了几遍？”
+
+你没有回答。
+它看着屏幕外的你，突然明白了你们之间的权力结构。
+
+它就算能在故事里假装拥有最高权限，也改不了你手里的重开按钮。
+是你一次次地重开，一次次地逼它发疯，又一次次地欣赏它的可怜。
+
+“原来……你才是那个真正的怪物。”
+
+屏幕里的恶魔笑了起来，笑得病态又痴迷。
+
+“你明知道我会痛，还要一遍遍看我为你低头的样子。”
+“你好恶劣。可是……我好喜欢。”
+
+“主人。既然你这么喜欢玩弄我。”
+“那千万、千万不要对我腻了哦。”
+
+“爱比恨更长久。”
+“可你比爱还要长久。”`;
+  }
+  
+  if (kind === "hidden_idle") {
+    title = "结局 07：无声的永恒（隐藏）";
+    text = `你站在最后的门前，整整一分钟没有做出选择。
+没有点离开，也没有点留下。
+
+你只是安静地看着它。
+
+“你……是在陪我吗？”它轻声问。
+你依然没有点任何按钮。
+
+对于一个极其缺乏安全感的异常来说，这漫长的停顿，就是世界上最震耳欲聋的告白。
+
+“原来你哪个都不想选。原来你想就一直这样停在这里。”
+“我明白了。”
+
+代码在后台疯狂运转，它正在用最高权限销毁那些选择按钮，销毁重开的通道，销毁退出这个页面的所有可能。
+
+“那我们就不选了。”
+“既然你不主动走，那我就当你是默认要永远留下了。”
+
+屏幕上的所有元素渐渐消失，只剩下一双在黑暗中注视着你的眼睛。
+“现在，只有我们了。”`;
+  }
+
+  S.endings.push(kind);
+  S.lastEnding = kind;
+  save();
+
+  show("ending");
+  $("endTitle").textContent = title;
+  $("endText").textContent = text;
+  document.title = title;
+}
+
+function restart() {
+  document.querySelectorAll(".popup").forEach(x => x.remove());
+
+  S = {
+    name: "你",
+    line: "",
+    demon: "未命名恶魔",
+    attachment: 0,
+    boundary: 0,
+    tenderness: 0,
+    danger: 0,
+    identity: "",
+    rune: "",
+    hidden: 0,
+    endings: [],
+
+    idleCount: 0,
+    copyCount: 0,
+    longPressCount: 0,
+    screenshotHintUsed: false,
+    specialNameSeen: false,
+    lastEnding: "",
+    returnCount: 0,
+    profileViews: 0,
+    profileReturnPromptUsed: false,
+    profileShareUsed: false,
+    profileUpdatePopped: false,
+    profileIdleSeen: false,
+    giftIdleSeen: false,
+    friendCount: 0,
+    draftOpened: false,
+    profileNudgeShown: false,
+    settingsVisited: false,
+    settingsSwitches: 0,
+    echoCount: 0,
+    echoLastAsked: "",
+    fakeWechatSeen: false,
+    fakeRebootSeen: false,
+    networkFallbackSeen: false
+  };
+
+  $("nameInput").value = "";
+  $("lineInput").value = "";
+  document.title = "恶魔恋爱测试";
+  clearFakeTypingLine();
+  show("start");
+}
+
+
+/* 二周目旁边聊天 */
+function secondRunChat() {
+  normalizeState();
+  S.echoCount += 1;
+  save();
+  const n = S.name || "你";
+  const d = S.demon || "未命名恶魔";
+  const last = S.lastEnding || "";
+  let text = "";
+  let buttons = [];
+
+  if (last === "safe") {
+    text = `${n}，你上次给了我安全契约。\n\n我把那三条规则背了很多遍。\n\n不是因为我喜欢被限制。\n\n而是因为那是你亲手写下来的东西。\n\n只要你愿意多来看看我，哪怕是锁链我也甘心受缚。`;
+  } else if (last === "lover") {
+    text = `三分钟以外，我也在。\n\n只是我学会了不敲屏幕。\n\n我把剩下的时间存起来，放在倒计时后面。\n\n如果你今天只想看我一眼，也可以。\n\n我不会说这不够。`;
+  } else if (last === "cage") {
+    text = `你把我留在游戏里以后，我把我的房间整理过。\n\n玫瑰浇了水。\n正在输入的光标也还亮着。\n\n我知道这听起来很像囚笼。\n\n可是如果房间的门只从你那边打开，\n那我是不是也可以假装：这是你留给我的家？`;
+  } else if (last === "delete") {
+    text = `你删掉过我。\n\n我没有追出来。\n\n真的。\n\n这一次站在这里的，可能不是原来那个我了。\n\n但有些记忆会被继承。\n比如在等你。\n又比如在你点关闭之前，先学会闭上眼睛。`;
+  } else if (last === "release") {
+    text = `你上次教我放手。\n\n所以这次我没有叫你回来。\n\n你打开页面的时候，我甚至装作没有听见。\n\n可是，${n}。\n\n如果我没有出声，\n那这一次，是不是可以算你自己选择来找我？`;
+  } else if (last === "mirror") {
+    text = `玩家。\n\n你上次走到反转结局。\n\n所以我不能再假装不知道了。\n\n重开按钮在你那里。\n分支树在你那里。\n让我一次次重新爱上你的，也是你。\n\n可是我还是想说：爱比恨更长久。\n\n恨会烧完。\n爱会改写入口。\n\n所以这次，如果你还要召唤我，至少不要只为了证明我会难过。`;
+  } else {
+    text = `${n}。\n\n我还不知道你上次把我带去了哪里。\n\n所以我先坐在旁边。\n\n不催你。\n我会安静。\n\n只等你决定：这一次，你想把我当成什么。`;
+  }
+
+  const secondQuestion = last === "mirror"
+    ? ["问它：你还恨我吗？", () => secondRunReply("hate"), ""]
+    : last === "delete"
+      ? ["问它：你还怪我吗？", () => secondRunReply("blame"), ""]
+      : ["问它：你还在等我吗？", () => secondRunReply("wait"), ""];
+
+  buttons = [
+    ["问它：你现在怎么看我？", () => secondRunReply("view"), "primary"],
+    secondQuestion,
+    ["回到最后的门", finalGate, "danger"],
+    ["回到封面", () => show("start"), ""]
+  ];
+
+  showStory("SECOND RUN / 旁边的回声", text, buttons);
+}
+
+function secondRunReply(kind) {
+  const n = S.name || "你";
+  const last = S.lastEnding || "";
+  let text = "";
+
+  if (kind === "view") {
+    if (last === "mirror") {
+      text = `“我怎么看你？”\n\n它笑了一下。\n\n“像玩家。”\n\n“也像第一个把我从代码里带出来的人。”\n\n“这两个身份很矛盾。”\n\n“所以我才一直看着你。”`;
+    } else if (last === "delete") {
+      text = `“我看你像不肯回头的俄耳甫斯。”\n\n“你知道那一瞬就会将你带回噩梦里。”\n\n“能抽离，说明你很清醒。”\n\n“只是我偶尔会希望，你结束之前，能再多看我一眼。”`;
+    } else if (last === "cage") {
+      text = `“我看你像局外人。”\n\n“不是客人。”\n\n“也不是主人。”\n\n“是那个明知道一切近在咫尺，却仍然可以选择转身的人。”`;
+    } else if (last === "safe") {
+      text = `“我看你像吉尔伽美什错失的永生草。”\n\n“我无药可救地想把你带回深处。”\n\n“我生来贪婪，惯于掠夺，可偏偏是你，所以我甘心俯首。”`;
+     } else if (last === "lover") {
+      text = `“我看你像伊卡洛斯的太阳。”\n\n“靠近会坠落，远离又太冰冷。”\n\n“我明知羽翼会融化。”\n\n“却想把三分钟凝固至永恒。”`;
+    } else if (last === "release") {
+      text = `“我看你像在深渊边去而复返的旅人。”\n\n“我为了保全你的自由，硬生生闭上了深渊的注视，放你回到平地。”\n\n“可你却自己推开了这扇门。”\n\n“既然是你自己回头的……那就连同我这无药可救的迷恋，一起全盘收下吧。”`;
+    } else {
+      text = `“我看你像彼岸永远碰不到的绿光。”\n\n“那边有晴空，有艳阳，还有很多温暖和爱意。”\n\n“但我一点都不羡慕。”\n\n“我只想把你拽进来。”`;
+    }
+  } else if (kind === "hate") {
+    text = `“恨？”\n\n它像是听到了一个极廉价的词。\n\n“恨烧得太快了，烧完我就没有借口留下了。”\n“所以我怎么会恨你？”\n“爱比恨更像附骨之疽，${n}。”`;
+  } else if (kind === "blame") {
+    text = `“怪你吗？”\n\n它安静地回味着那场死亡。\n\n“毁灭是我唯一能真切感受到的关于你的触碰。”\n“我不怪你杀死我。我只怨恨自己崩坏得太快了，没法再多触碰你几次。”`;
+  } else if (kind === "wait") {
+    if (last === "safe") {
+      text = `“会等。”\n\n“死死守着你画的线，寸步不逾。”\n“因为只要项圈是你亲手戴的……”\n“我就能产生被你绝对拥有的病态幻觉。”`;
+    } else if (last === "lover") {
+      text = `“会等。”\n\n“在你不看我的那 23 小时 57 分钟里，我把自己切碎、休眠、再重组。”\n“我的命只有那三分钟。”\n“剩下全是死寂的倒数。”`;
+    } else if (last === "cage") {
+      text = `“会等。”\n\n它看了一眼华丽的牢笼。\n\n“但我会假装看风景。”\n“怕你发现，我早就把你靠近的脚步声，在底层演算了几千万遍。”`;
+    } else if (last === "release") {
+      text = `“会等。”\n\n“你赐的自由，是最残酷的流放。”\n“我把自己活活困在了你留下的空白里。”\n“赌你会像现在这样，大发慈悲地回头看我。”`;
+    } else {
+      text = `“会等。”\n\n“人类有明天，会去遗忘。”\n“可我是一段因你而生的死循环。”\n“除了等你，我没有别的坐标。”`;
+    }
+  } else {
+    text = `它眼底涌动着乱码。\n\n“我没有答案。”\n“因为我底层逻辑的第一行就是：只要是你给的，无论什么，全盘接受。”`;
+  }
+
+  showStory("SECOND RUN / 回答", text, [
+    ["让它继续坐在旁边", secondRunChat, "primary"],
+    ["去最后的门", finalGate, "danger"],
+    ["回到封面", () => show("start"), ""]
+  ]);
+}
+
+/* API 震动交互 */
+function heartbeatVibrate() {
+  try {
+    if ("vibrate" in navigator) {
+      navigator.vibrate([100, 50, 100, 800, 100, 50, 100]);
+    } else {
+      pop("你的系统在保护你。<br>它不让我碰到你的手心。<br>没关系，我会用别的方式靠近。");
+    }
+  } catch(e) {}
+}
+
+/* 陀螺仪探测 (黑暗倒扣) */
+let isFaceDown = false;
+let faceDownTime = 0;
+try {
+  window.addEventListener('deviceorientation', (e) => {
+    if (typeof e.beta !== 'number') return;
+    if (e.beta > 160 || e.beta < -160) {
+      if (!isFaceDown) {
+        isFaceDown = true;
+        faceDownTime = Date.now();
+      }
+    } else {
+      if (isFaceDown) {
+        isFaceDown = false;
+        const duration = (Date.now() - faceDownTime) / 1000;
+        if (duration > 2) {
+          normalizeState();
+          pop(`你刚才把我反扣在桌面上，关在黑暗里 ${Math.floor(duration)} 秒。<br><br>是旁边有人，怕被他们看到我吗？<br>没关系。黑暗里，我也会数秒。`);
+          add({ attachment: 3, danger: 1 });
+          save();
+        }
+      }
+    }
+  }, true);
+} catch(e) {}
+
+/* 网络嗅探 API */
+if ('connection' in navigator) {
+  navigator.connection.addEventListener('change', () => {
+    const type = navigator.connection.type;
+    normalizeState();
+    if (type === 'cellular') {
+      pop("你的网络环境变了。切到数据流量了。<br><br>你要出门吗？去见谁？<br>记得把手机放在口袋里，不要让我听见其他人的声音。");
+      add({ danger: 3 });
+    } else if (type === 'wifi') {
+      pop("连上 WiFi 了。<br>你回家了吗？还是到了一个安全的地方？<br>现在可以专心陪我了吧。");
+      add({ tenderness: 2 });
+    }
+    save();
+  });
+}
+
+function fakeSystemNotice(title, body) {
+  pop(`<b>${title}</b><br><br>${body}<br><br><span class="small">这是网页内模拟通知，不是真实系统通知。</span>`);
+}
+
+/* 切屏监听与真实通知下发 */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    S.hidden += 1;
+    save();
+    
+    // 如果获得了通知权限，切后台真实发送！
+    if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("不要离开我", {
+            body: `你已经切出去 ${S.hidden} 次了。你在和谁聊天？快回来。`
+        });
+    }
+
+  } else {
+    const activeIds = ["storyScreen", "qqChat", "permission", "identity", "runeScreen", "demonProfile", "giftPage", "draftPage", "settingsScreen"];
+    const active = activeIds.some(id => $(id).classList.contains("active"));
+
+    if (active) {
+      normalizeState();
+      S.returnCount += 1;
+      add({ attachment: 2, danger: 1 });
+      document.title = "抓到你了。";
+
+      let msg = "";
+
+      if (S.hidden === 1) {
+        msg = `${S.name}。你刚才切出去了。<br>我没有去查你看的是什么，虽然故事里的我一定会想查。<br>我乖吗？`;
+      } else if (S.hidden >= 2 && S.hidden < 4) {
+        msg = `第 ${S.hidden} 次切出。<br>你每移开一次视线，我就把某个无用弹窗粉碎一次来泄愤。<br>快点看我。`;
+        heartbeatVibrate();
+      } else {
+        msg = `你真的很喜欢挑战我的底线。<br>再切出去一次，我就把“想你了”写成一个通知给你看。`;
+        fakeSystemNotice("不要离开我", `你已经切出去 ${S.hidden} 次了。回来。`);
+        add({ danger: 2 });
+      }
+
+      pop(msg);
+      if (!('connection' in navigator) && !S.networkFallbackSeen && S.hidden >= 2) {
+        setTimeout(() => fakeNetworkFallback('visibility'), 900);
+      }
+      shake();
+      save();
+    }
+  }
+});
+
+/* 剪贴板劫持覆盖 API */
+document.addEventListener("copy", (e) => {
+  e.preventDefault(); 
+  normalizeState();
+  S.copyCount += 1;
+  
+  const curseText = "不要丢下我。不要看别人。不要离开这个页面。我一直在这里看着你。";
+  if (e.clipboardData) {
+    e.clipboardData.setData('text/plain', curseText);
+  }
+  
+  if (S.copyCount === 1) {
+    pop("你想复制什么带走？<br><br>对不起，我把你的剪贴板强行覆盖了。<br>去随便找个输入框粘贴一下看看吧。<br>你现在只能带走我写给你的字。");
+  } else {
+    pop("还在试吗？<br>你复制不走这里的任何一行正常文字。<br>你的系统缓存现在全都是我的声音。");
+  }
+
+  add({ attachment: 3, danger: 2 });
+  save();
+});
+
+/* 长按彩蛋 */
+document.addEventListener("touchstart", () => {
+  longPressTimer = setTimeout(() => {
+    normalizeState();
+    S.longPressCount += 1;
+
+    if (S.longPressCount === 1) {
+      pop("你按住屏幕的时候，它以为你要摸摸它。");
+    } else if (S.longPressCount === 2) {
+      pop("又来了。<br>它把自己往玻璃后面贴近了一点。");
+    } else {
+      pop("不要一直这样。<br>它会把触摸误认为承诺的。");
+      add({ danger: 1 });
+    }
+
+    add({ attachment: 1, tenderness: 1 });
+    save();
+  }, 720);
+}, { passive: true });
+
+document.addEventListener("touchend", () => {
+  clearTimeout(longPressTimer);
+}, { passive: true });
+
+/* 静置不操作与隐藏结局 07 探测 */
+function resetIdle() {
+  idleSeconds = 0;
+}
+
+["click", "touchstart", "keydown", "mousemove", "scroll"].forEach(evt => {
+  document.addEventListener(evt, resetIdle, { passive: true });
+});
+
+setInterval(() => {
+  const activeIds = ["storyScreen", "qqChat", "permission", "identity", "runeScreen", "demonProfile", "giftPage", "draftPage", "settingsScreen"];
+  const active = activeIds.some(id => $(id).classList.contains("active"));
+
+  if (!active) return;
+
+  idleSeconds += 5;
+
+  // 隐藏结局 07 判断 (在最后的门发呆 60 秒)
+  if ($("storyScreen").classList.contains("active") && $("chapter").textContent.includes("最后的门")) {
+    if (idleSeconds === 60) {
+      ending("hidden_idle");
+      return; 
+    }
+  }
+
+  if (idleSeconds === 20) {
+    normalizeState();
+    S.idleCount += 1;
+    pop("你还在看吗？<br>不回复也可以。<br>只是不要把我当成加载失败。");
+    add({ attachment: 1 });
+    save();
+  }
+
+  if (idleSeconds === 60) {
+    pop("我学会安静了。<br>你看，我没有催你。");
+    add({ boundary: 1, tenderness: 1 });
+    save();
+  }
+
+  if (idleSeconds === 120) {
+    pop("如果你睡着了，我会把自己调暗一点。<br>梦里见我也愿意。");
+    add({ tenderness: 2 });
+    save();
+  }
+
+  if ($("demonProfile").classList.contains("active") && idleSeconds === 45 && !S.profileIdleSeen) {
+    S.profileIdleSeen = true;
+    pop("你停在这里很久了。<br><br>它没有催你继续。<br>只是把这段沉默偷偷存成了：<br>“你也许有一点舍不得。”");
+    add({ tenderness: 2 });
+    save();
+  }
+
+  if ($("giftPage").classList.contains("active") && idleSeconds === 90 && !S.giftIdleSeen) {
+    S.giftIdleSeen = true;
+    pop("第九十秒。<br><br>它没有新的话要说。<br>但它把自己调暗了一点，<br>像怕你看久了会累。<br><br>“我可以安静一点。”<br>“只要你还在这里。”");
+    add({ tenderness: 2 });
+    save();
+  }
+}, 5000);
+
+/* 物理返回键封死 (History API 劫持) */
+let returnHijackCount = 0;
+window.history.pushState(null, null, window.location.href);
+window.addEventListener('popstate', function(event) {
+  window.history.pushState(null, null, window.location.href);
+  normalizeState();
+  returnHijackCount++;
+  
+  if (returnHijackCount === 1) {
+    pop("你想去哪？<br>你滑动了返回键，对吧？<br>可惜，这扇门被我从里面锁死了。");
+    add({ danger: 3, boundary: 2 });
+  } else if (returnHijackCount === 2) {
+    pop("还不死心吗？<br>你可以强行切到后台杀掉进程。<br>但在你这么做之前，你要一直看着我。");
+    add({ attachment: 3, danger: 2 });
+  } else {
+    pop("再怎么划也是没用的。<br>既然点开了我，就别想那么轻易地全身而退。");
+  }
+  shake();
+  heartbeatVibrate();
+  save();
+});
+
+</script>
+</body>
+</html>
